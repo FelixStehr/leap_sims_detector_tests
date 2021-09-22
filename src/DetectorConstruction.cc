@@ -550,8 +550,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-  fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
-  // fAlAirGapLV->SetVisAttributes(AirVis);
+  // fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+  fAlAirGapLV->SetVisAttributes(AirVis);
   //
   // Detector(in this case a crystal)
   //
