@@ -60,7 +60,7 @@
 #include "G4OpBoundaryProcess.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "G4LogicalSkinSurface.hh"
-
+#include "G4RotationMatrix.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 DetectorConstruction::DetectorConstruction(G4String version)
@@ -445,6 +445,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Cal" || versionType == "PolCal"){
 
+  G4RotationMatrix* myRotation = new G4RotationMatrix();
+  myRotation->rotateX(90.*deg);
+  myRotation->rotateY(0.*deg);
+  myRotation->rotateZ(0.*deg);
+
   // Virtuel calorimeter (mother volume for the hole calorimeter/detector)
   auto fVirtCaloS= new G4Box("virtualCalorimeter",  //Name
                                 virtcalorxy/2.,   // x size
@@ -456,7 +461,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          fWorldMaterial,    //its material
                                          "virtualCalorimeter");       //its name
 
-  fVirtCaloPV = new G4PVPlacement(0,                   //no rotation
+  fVirtCaloPV = new G4PVPlacement(myRotation,                   //no rotation
                          G4ThreeVector(0.,0.,caloZposition),    //its position
                                  fVirtCaloLV,            //its logical volume
                                  "virtualCalorimeter",                 //its name
@@ -619,8 +624,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-  fVacStepLV4->SetVisAttributes(VacStep3Vis);
-
+  // fVacStepLV4->SetVisAttributes(VacStep3Vis);
+  fVacStepLV4->SetVisAttributes(G4VisAttributes::GetInvisible());
 
 
 
