@@ -75,7 +75,7 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   fSizeXY = 50*mm;
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
-  fWorldSize = 4.1*m;
+  fWorldSize = 8*m;
   CrystalNumber= "one";
 
   SetConvMaterial("G4_W");
@@ -752,7 +752,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
 
-
+   //
    // beam line tube
    auto fbeamlineTubeS= new G4Tubs("beamline", //name
                                   0., // inner radius
@@ -783,7 +783,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                   360.0*deg ); // tota angle
 
    auto fbeamlineVacLV = new G4LogicalVolume(fbeamlineVacS,  //its solid
-                                          fWorldMaterial,    //its material
+                                          Vacuum,    //its material
                                          "beamlineVac");  //its name
 
    auto fbeamlineVacPV = new G4PVPlacement(0,                   //no rotation
