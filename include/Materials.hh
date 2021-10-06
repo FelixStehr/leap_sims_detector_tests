@@ -39,6 +39,8 @@ private:
   G4Material* Lead;
   G4Material* Copper;
   G4Material* Aluminium;
+  G4Material* Concrete;
+  G4Material* StainlessSteel;
 
   // G4Material* Grease; ///< Optical grease between PMT window and quartz stick
 

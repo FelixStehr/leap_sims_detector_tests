@@ -48,7 +48,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
 
-  DetectorConstruction(G4String version);
+  DetectorConstruction(G4String version, G4String beamline);
   ~DetectorConstruction();
 
 public:
@@ -114,6 +114,7 @@ private:
   DetectorMessenger* fMessenger;
 
   G4String versionType;
+  G4String beamlineStatus;
   G4String CrystalNumber;
 
 };

@@ -63,11 +63,12 @@
 #include "G4RotationMatrix.hh"
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::DetectorConstruction(G4String version)
+DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
 : G4VUserDetectorConstruction(),
   PhysicalWorld(0), PhysicalCore(0), fConvMaterial(0), fWorldMaterial(0), fCaloMaterial(0)
 {
   versionType=version;
+  beamlineStatus=beamline;
   allMaterials = new Materials();
   allMaterials->DefineMaterials();
 
@@ -78,7 +79,14 @@ DetectorConstruction::DetectorConstruction(G4String version)
   CrystalNumber= "one";
 
   SetConvMaterial("G4_W");
-  SetWorldMaterial("Galactic");
+  if(beamlineStatus=="on"){
+    SetWorldMaterial("Air");}
+  else if(beamlineStatus=="off"){
+    SetWorldMaterial("Galactic");}
+  else {
+    SetWorldMaterial("Galactic");
+    G4cout << "NO VALID IMPUT FOR BEAMLINE: beamlineStatus set to off!->all simulations in vacuum"<< G4endl;
+     }
   SetCaloMaterial("TF101");
 
   fMessenger = new DetectorMessenger(this);
@@ -154,7 +162,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   else {
     virtcalorxy = calorcellxy;
     SetCrystalnumber("one");
-    G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!" << fCaloMaterial->GetName() << G4endl;
+    G4cout << "NO VALID IMPUT FOR CRYSTALNUMBER: Crystalnumber set to one!"<< G4endl;
   }
 
 
@@ -175,7 +183,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* Air       = allMaterials->GetMat("Air");
   G4Material* Al        = allMaterials->GetMat("Aluminium");
   G4Material* Vacuum    = allMaterials->GetMat("Galactic");
-
+  G4Material* Concrete  = allMaterials->GetMat("G4_CONCRETE");
+  G4Material* StainlessSteel  = allMaterials->GetMat("G4_STAINLESS-STEEL");
+  G4Material* Copper = allMaterials->GetMat("G4_Cu");
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //VisAttributes
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -445,10 +455,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Cal" || versionType == "PolCal"){
 
-  G4RotationMatrix* myRotation = new G4RotationMatrix();
-  myRotation->rotateX(90.*deg);
-  myRotation->rotateY(0.*deg);
-  myRotation->rotateZ(0.*deg);
+  // G4RotationMatrix* myRotation = new G4RotationMatrix();
+  // myRotation->rotateX(90.*deg);
+  // myRotation->rotateY(0.*deg);
+  // myRotation->rotateZ(0.*deg);
 
   // Virtuel calorimeter (mother volume for the hole calorimeter/detector)
   auto fVirtCaloS= new G4Box("virtualCalorimeter",  //Name
@@ -461,7 +471,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          fWorldMaterial,    //its material
                                          "virtualCalorimeter");       //its name
 
-  fVirtCaloPV = new G4PVPlacement(myRotation,                   //no rotation
+  fVirtCaloPV = new G4PVPlacement(0,                   //no rotation: 0 or rotation 90 deg around x axis : myRotaion
                          G4ThreeVector(0.,0.,caloZposition),    //its position
                                  fVirtCaloLV,            //its logical volume
                                  "virtualCalorimeter",                 //its name
@@ -590,7 +600,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                vacthick/2.);
 
   auto fVacStepLV3 = new G4LogicalVolume(fVacStepS3,    //its solid
-                                        Vacuum,    //its material
+                                        fWorldMaterial,    //its material
                                         "VacStep3");       //its name
 
   fVacStepPV3 = new G4PVPlacement(0,                   //no rotation
@@ -613,7 +623,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                vacthick/2.);
 
   auto fVacStepLV4 = new G4LogicalVolume(fVacStepS3,    //its solid
-                                        Vacuum,    //its material
+                                        fWorldMaterial,    //its material
                                         "VacStep4");       //its name
 
   fVacStepPV4 = new G4PVPlacement(0,                   //no rotation
@@ -626,6 +636,198 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // fVacStepLV4->SetVisAttributes(VacStep3Vis);
   fVacStepLV4->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ // Beamline geometry
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ if(beamlineStatus=="on"){
+
+   G4double concreteBlocklength = 80. *cm;  //length of the conrete block
+   G4double concreteBlockhigth= 120.*cm;   //hight of the conrete block
+   G4double concreteBlockwidth= 50.*cm;    //width of the conrete block
+
+   G4double  concreteHolehigth =  20.*cm;     //hight of the hole in the conrete concrete block
+   G4double  concreteHolewidth =  9.5*cm;     //width of the hole in the conrete concrete block
+
+   G4double  collimatorlength  =  20.*cm;     //lenght of the colimator copper block
+   G4double  collimatorradius  =  0.25*cm;      //radius of the colimator hole
+
+   G4double distoCBlock= 18.*cm;            //distance from the aluwindow of the beam line ot to the conrete block
+
+   G4double Aluwindowthick= 0.2*mm;         // thickness of the aluwindow
+   G4double beamlineVaclength=3 *m;      // lenght of vaccum in the beam line
+   G4double beamlinelength= Aluwindowthick+ beamlineVaclength;// lenght of the "toy" beamline
+   G4double rInner= 2. *cm;                 // inner radius of the beam line
+   G4double rOuter= 2.15 *cm;               //outer radius of the beam line
+
+
+
+
+   //Concrete Block
+   auto fconcreteBlockS= new G4Box("concreteBlock",         // Name
+                                concreteBlockwidth/2.,     // x size
+                                concreteBlockhigth/2.,     // y size
+                                concreteBlocklength/2.);    // z size
+
+
+   auto fconcreteBlockLV = new G4LogicalVolume(fconcreteBlockS,  //its solid
+                                         Concrete,    //its material
+                                         "concreteBlock");  //its name
+
+   auto fconcreteBlockPV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,-concreteBlocklength/2.),    //its position
+                                 fconcreteBlockLV,            //its logical volume
+                                 "concreteBlock",                 //its name
+                                LogicalWorld,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                 //copy number
+
+
+   // hole in conrete block
+   auto fconcreteHoleS= new G4Box("concreteHole",         // Name
+                                concreteHolewidth/2.,     // x size
+                                concreteHolehigth/2.,     // y size
+                                concreteBlocklength/2.);    // z size
+
+
+   auto fconcreteHoleLV = new G4LogicalVolume(fconcreteHoleS,  //its solid
+                                         fWorldMaterial,    //its material
+                                         "concreteHole");  //its name
+
+   auto fconcreteHolePV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,0.),    //its position
+                                 fconcreteHoleLV,            //its logical volume
+                                 "concreteHole",                 //its name
+                                 fconcreteBlockLV,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+   fconcreteHoleLV->SetVisAttributes(AluVis);
+
+
+
+   // copper collimator
+   auto fcollimatorS= new G4Box("collimator",         // Name
+                                concreteHolewidth/2.,     // x size
+                                concreteHolehigth/2.,     // y size
+                                collimatorlength/2.);    // z size
+
+
+   auto fcollimatorLV = new G4LogicalVolume(fcollimatorS,  //its solid
+                                          Copper,    //its material
+                                         "collimator");  //its name
+
+   auto fcollimatorPV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,(concreteBlocklength-collimatorlength)/2),    //its position
+                                 fcollimatorLV,            //its logical volume
+                                 "collimator",                 //its name
+                                 fconcreteHoleLV,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+   fcollimatorLV->SetVisAttributes(CopperCoilVis);
+
+
+   // copper collimator hole
+   auto fcollimatorHoleS= new G4Tubs("collimatorhole", //name
+                                  0., // inner radius
+                                  collimatorradius,  // outer radius
+                                  collimatorlength/2., // half length in z
+                                  0.0*deg,  // starting angle
+                                  360.0*deg ); // tota angle
+
+   auto fcollimatorHoleLV = new G4LogicalVolume(fcollimatorHoleS,  //its solid
+                                          fWorldMaterial,    //its material
+                                         "collimatorhole");  //its name
+
+   auto fcollimatorHolePV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,0.),    //its position
+                                 fcollimatorHoleLV,            //its logical volume
+                                 "collimatorhole",                 //its name
+                                 fcollimatorLV,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+
+
+
+   // beam line tube
+   auto fbeamlineTubeS= new G4Tubs("beamline", //name
+                                  0., // inner radius
+                                  rOuter,  // outer radius
+                                  beamlinelength/2., // half length in z
+                                  0.0*deg,  // starting angle
+                                  360.0*deg ); // tota angle
+
+   auto fbeamlineTubeLV = new G4LogicalVolume(fbeamlineTubeS,  //its solid
+                                          StainlessSteel,    //its material
+                                         "beamline");  //its name
+
+   auto fbeamlineTubePV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,-(concreteBlocklength+distoCBlock+beamlinelength/2.)),    //its position
+                                 fbeamlineTubeLV,            //its logical volume
+                                 "beamline",                 //its name
+                                 LogicalWorld,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+
+   // beam line Vaccuum
+   auto fbeamlineVacS= new G4Tubs("beamlineVac", //name
+                                  0., // inner radius
+                                  rInner,  // outer radius
+                                  beamlineVaclength/2., // half length in z
+                                  0.0*deg,  // starting angle
+                                  360.0*deg ); // tota angle
+
+   auto fbeamlineVacLV = new G4LogicalVolume(fbeamlineVacS,  //its solid
+                                          fWorldMaterial,    //its material
+                                         "beamlineVac");  //its name
+
+   auto fbeamlineVacPV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,-Aluwindowthick/2.),    //its position
+                                 fbeamlineVacLV,            //its logical volume
+                                 "beamlineVac",                 //its name
+                                 fbeamlineTubeLV,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+   fbeamlineVacLV->SetVisAttributes(CopperCoilVis);
+
+
+   // Aluminum Window
+   auto fAluWindowS= new G4Tubs("AluWindow", //name
+                                  0., // inner radius
+                                  rOuter,  // outer radius
+                                  Aluwindowthick/2., // half length in z
+                                  0.0*deg,  // starting angle
+                                  360.0*deg ); // tota angle
+
+   auto fAluWindowLV = new G4LogicalVolume(fAluWindowS,  //its solid
+                                          Al,    //its material
+                                         "AluWindow");  //its name
+
+   auto fAluWindowPV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,beamlineVaclength/2.),    //its position
+                                 fAluWindowLV,            //its logical volume
+                                 "AluWindow",                 //its name
+                                 fbeamlineTubeLV,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+   fAluWindowLV->SetVisAttributes(VacStepVis);
+
+
+
+
+
+ }
+
+
+
+
 
 
 
