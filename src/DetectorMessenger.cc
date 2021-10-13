@@ -51,6 +51,9 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fDetDir = new G4UIdirectory("/leap/det/");
   fDetDir->SetGuidance("detector construction");
 
+  fBeamlineDir = new G4UIdirectory("/leap/beamline/");
+  fBeamlineDir->SetGuidance("detector construction");
+
   fConvMaterCmd = new G4UIcmdWithAString("/leap/det/SetConvMaterial",this);
   fConvMaterCmd->SetGuidance("Select material of the Converter Target.");
   fConvMaterCmd->SetParameterName("choice",false);
@@ -90,6 +93,20 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fCrystalnumberCmd->SetParameterName("choice",false);
   fCrystalnumberCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fCollimatorCmd = new G4UIcmdWithADoubleAndUnit("/leap/beamline/Collimator",this);
+  fCollimatorCmd->SetGuidance("Set radius of the Collimator hole");
+  fCollimatorCmd->SetParameterName("RCollimator",false);
+  fCollimatorCmd->SetRange("RCollimator>=0.");
+  fCollimatorCmd->SetUnitCategory("Length");
+  fCollimatorCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fdCaloCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/dCalo",this);
+  fdCaloCmd->SetGuidance("Set distance from Collimator to beamline");
+  fdCaloCmd->SetParameterName("dCalo",false);
+  fdCaloCmd->SetRange("dCalor>0.");
+  fdCaloCmd->SetUnitCategory("Length");
+  fdCaloCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -104,6 +121,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fDetDir;
   delete fLeapDir;
   delete fCrystalnumberCmd;
+  delete fCollimatorCmd;
+  delete fdCaloCmd;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -128,6 +147,14 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
  if( command == fCrystalnumberCmd )
    { fDetector->SetCrystalnumber(newValue);}
 
+ if( command == fCrystalnumberCmd )
+   { fDetector->SetCrystalnumber(newValue);}
+
+ if( command == fCollimatorCmd )
+   { fDetector->SetCollimatorRadius(fCollimatorCmd->GetNewDoubleValue(newValue));}
+
+ if( command == fdCaloCmd )
+   { fDetector->SetCaloDistance(fdCaloCmd->GetNewDoubleValue(newValue));}
 
 }
 

@@ -77,6 +77,8 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   fConvThick = 1.75*mm;
   fWorldSize = 8*m;
   CrystalNumber= "one";
+  dCalo = 10*cm;
+  RCollimator = 2.5*mm;
 
   SetConvMaterial("G4_W");
   if(beamlineStatus=="on"){
@@ -701,7 +703,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4double  concreteHolewidth =  9.5*cm;     //width of the hole in the conrete concrete block
 
    G4double  collimatorlength  =  20.*cm;     //lenght of the colimator copper block
-   G4double  collimatorradius  =  0.25*cm;      //radius of the colimator hole
+   G4double  collimatorradius  =  RCollimator;      //radius of the colimator hole
 
    G4double distoCBlock= 18.*cm;            //distance from the aluwindow of the beam line ot to the conrete block
 
@@ -1063,6 +1065,18 @@ void DetectorConstruction::SetConvThick(G4double value)
 void DetectorConstruction::SetCrystalnumber(G4String value)
 {
   CrystalNumber=value;
+  UpdateGeometry();
+}
+
+void DetectorConstruction::SetCollimatorRadius(G4double value)
+{
+  RCollimator = value;
+  UpdateGeometry();
+}
+
+void DetectorConstruction::SetCaloDistance(G4double value)
+{
+  dCalo = value;
   UpdateGeometry();
 }
 
