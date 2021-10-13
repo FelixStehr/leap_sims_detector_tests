@@ -156,7 +156,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   if (CrystalNumber == "one"){
     virtcalorxy = calorcellxy;
   }
-  else if (CrystalNumber == "nine"){
+  else if (CrystalNumber == "nine" || CrystalNumber == "four" ){
     virtcalorxy = 3*calorcellxy;
   }
   else {
@@ -223,8 +223,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //Calorimeter
   //
-
-
     G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
     AirVis->SetVisibility(true);
     AirVis->SetLineWidth(2);
@@ -246,6 +244,43 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     VacStep3Vis->SetVisibility(true);
     VacStep3Vis->SetLineWidth(1);
     VacStep3Vis->SetForceSolid(true);
+
+
+  //
+  //Beam Line
+  //
+    G4VisAttributes * ConcreteVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255., 0.95 ));
+    ConcreteVis->SetVisibility(true);
+    ConcreteVis->SetLineWidth(2);
+    ConcreteVis->SetForceWireframe( true );
+    //ConcreteVis->SetForceSolid(true);
+
+    G4VisAttributes * ConcreteHoleVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    ConcreteHoleVis->SetVisibility(true);
+    ConcreteHoleVis->SetLineWidth(2);
+    //ConcreteHoleVis->SetForceSolid(false);
+    ConcreteHoleVis->SetForceWireframe( true );
+
+    G4VisAttributes * BeamTubeVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255., 0.95 ));
+    BeamTubeVis->SetVisibility(true);
+    BeamTubeVis->SetLineWidth(1);
+    BeamTubeVis->SetForceSolid(true);
+
+    G4VisAttributes * AluWindowVis= new G4VisAttributes( G4Colour(255/255. ,165/255. ,0/255.));
+    AluWindowVis->SetVisibility(true);
+    AluWindowVis->SetLineWidth(2);
+    AluWindowVis->SetForceSolid(true);
+
+    G4VisAttributes * CollimatorVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255.));
+    CollimatorVis->SetVisibility(true);
+    CollimatorVis->SetLineWidth(1);
+    CollimatorVis->SetForceSolid(true);
+
+    G4VisAttributes * BeamLineVacVis= new G4VisAttributes( G4Colour(142/255. ,229/255. ,238/255.));
+    CollimatorVis->SetVisibility(true);
+    CollimatorVis->SetLineWidth(1);
+    CollimatorVis->SetForceSolid(true);
+
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // World
@@ -519,6 +554,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                0);                        //copy number       //copy number
   }
 
+  else if(CrystalNumber=="four"){
+  //the array for the placement of the 4 calorimetercells in the virtual calorimeter
+  G4double CalorRX4[4]={0,calorcellxy,-calorcellxy,0};
+  G4double CalorRY4[4]={0,0,0,calorcellxy};
+  for (G4int i=0;i<=3;i++){
+  fCaloCellPV = new G4PVPlacement(0,		       //no rotation
+               G4ThreeVector(CalorRX4[i],CalorRY4[i],0),  //its position
+               fCaloCellLV,            //its logical volume
+              "physicalcalorimeter",    //its name
+               fVirtCaloLV,               //its mother
+               false,                     //no boolean operat
+               i);                        //copy number       //copy number
+  }
+  }
 
   fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
@@ -659,8 +708,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4double Aluwindowthick= 0.2*mm;         // thickness of the aluwindow
    G4double beamlineVaclength=3 *m;      // lenght of vaccum in the beam line
    G4double beamlinelength= Aluwindowthick+ beamlineVaclength;// lenght of the "toy" beamline
-   G4double rInner= 2. *cm;                 // inner radius of the beam line
-   G4double rOuter= 2.15 *cm;               //outer radius of the beam line
+   G4double rInner= 1.85 *cm;                 // inner radius of the beam line
+   G4double rOuter= 1.925 *cm;               //outer radius of the beam line
 
 
 
@@ -684,6 +733,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                 //copy number
 
+   fconcreteBlockLV->SetVisAttributes(ConcreteVis);
+
+
 
    // hole in conrete block
    auto fconcreteHoleS= new G4Box("concreteHole",         // Name
@@ -704,7 +756,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-   fconcreteHoleLV->SetVisAttributes(AluVis);
+  fconcreteHoleLV->SetVisAttributes(ConcreteHoleVis);
 
 
 
@@ -727,7 +779,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-   fcollimatorLV->SetVisAttributes(CopperCoilVis);
+   fcollimatorLV->SetVisAttributes(CollimatorVis);
 
 
    // copper collimator hole
@@ -751,7 +803,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  0);                        //copy number
 
 
-
    //
    // beam line tube
    auto fbeamlineTubeS= new G4Tubs("beamline", //name
@@ -773,6 +824,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
+   fbeamlineTubeLV->SetVisAttributes(BeamTubeVis);
 
    // beam line Vaccuum
    auto fbeamlineVacS= new G4Tubs("beamlineVac", //name
@@ -794,7 +846,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-   fbeamlineVacLV->SetVisAttributes(CopperCoilVis);
+   fbeamlineVacLV->SetVisAttributes(BeamLineVacVis);
 
 
    // Aluminum Window
@@ -817,7 +869,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-   fAluWindowLV->SetVisAttributes(VacStepVis);
+   fAluWindowLV->SetVisAttributes(AluWindowVis);
 
 
 
