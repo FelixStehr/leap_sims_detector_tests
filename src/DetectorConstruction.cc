@@ -169,8 +169,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   G4double virtcalorlength = calorcelllength;
-  G4double spacePolCal = 50. *mm;
-  G4double caloZposition = (magthick+virtcalorlength)/2+spacePolCal;
+  // G4double spacePolCal = dCalo;//50. *mm;
+  G4double caloZposition;
+
+  if(beamlineStatus=="on"){
+    caloZposition = virtcalorlength/2+dCalo;}
+  else {caloZposition = (magthick+virtcalorlength)/2+dCalo;}
 
   G4double vac3x = alairgapx;// this version is to place the vacstep in the aluwrapping
   G4double vac3y = alairgapy; // this version is to place the vacstep in the aluwrapping

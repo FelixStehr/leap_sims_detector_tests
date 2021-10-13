@@ -103,7 +103,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fdCaloCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/dCalo",this);
   fdCaloCmd->SetGuidance("Set distance from Collimator to beamline");
   fdCaloCmd->SetParameterName("dCalo",false);
-  fdCaloCmd->SetRange("dCalor>0.");
+  fdCaloCmd->SetRange("dCalo>0.");
   fdCaloCmd->SetUnitCategory("Length");
   fdCaloCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
