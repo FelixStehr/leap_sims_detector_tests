@@ -182,7 +182,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Get materials
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  G4Material* absMat    = allMaterials->GetMat("G4_W");
+  // G4Material* absMat    = allMaterials->GetMat("G4_W");
+  G4Material* absMat    = allMaterials->GetMat("Galactic");
   G4Material* magMat    = allMaterials->GetMat("G4_Fe");
   G4Material* coilMat   = allMaterials->GetMat("G4_Cu");
   G4Material* shieldMat = allMaterials->GetMat("G4_Pb");
