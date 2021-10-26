@@ -1,7 +1,7 @@
 #!/bin/bash
 #-------------input parameters--------------------------------------------------
 #simulation number
-simNo=18
+simNo=19
 # output Type
 outType=single #single or bunch
 BeamlineStatus=on
@@ -25,7 +25,7 @@ eneType=Gauss # Gauss for Gaussian energy distribution, Mono for mono-energetic
 #fi
 sigmaE=2.547
 # beam geometry
-NBunch=1200000
+NBunch=120000
 sourceType=Beam #Beam or Point
 if [ "$sourceType" = "Beam" ]
 then
@@ -47,7 +47,7 @@ outFile=${SetUp}_${outType}_NBunch_${NBunch}_E_${eKin}_pm_${sigmaE}MeV_sz_${spot
 source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh
 
 # change parameters in macro
-sed  "s/eKin/${eKin}/g" simulation18.tmp > test${1}.mac
+sed  "s/eKin/${eKin}/g" simulation19.tmp > test${1}.mac
 sed -i  "s/ypos/$ypos/g" test${1}.mac
 sed -i  "s/corethick/$corethick/g" test${1}.mac
 sed -i  "s/convthick/$convthick/g" test${1}.mac

@@ -27,7 +27,7 @@
 /gps/energy eKin MeV
 /gps/number NBunch
 /gps/particle e-
-/gps/pos/centre 0.0 0.0 -3650.0 mm
+/gps/pos/centre 0.0 0.0 -3650.0 mm 
 
 #---------gps-commands-------------------------------------
 #simply comment if not needed

@@ -245,26 +245,30 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       if ( postvolume == VacStep3PV && prevolume !=VacStep3PV) {
           // fill ntuple id=0
           fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-          fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetKineticEnergy()/MeV);
+          fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/MeV);
           // fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
-          fAnalysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
-
-          fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
-          fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
-          fAnalysisManager->FillNtupleDColumn(0,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+          // fAnalysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+          //
+          // fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
+          // fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
+          // fAnalysisManager->FillNtupleDColumn(0,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
           fAnalysisManager->AddNtupleRow(0);}
 
      // if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
-      if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV) {
+      if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding()!=0) {
           // fill ntuple id=0
           fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
           fAnalysisManager->FillNtupleDColumn(1,1,aStep->GetPostStepPoint()->GetTotalEnergy()/MeV );
-          fAnalysisManager->FillNtupleDColumn(1,2,theTouchable->GetReplicaNumber(1));  // here the 1 means that it takes the copy numer of its mother volume
+          // fAnalysisManager->FillNtupleDColumn(1,2,theTouchable->GetReplicaNumber(1));  // here the 1 means that it takes the copy numer of its mother volume
 
-          fAnalysisManager->FillNtupleDColumn(1,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
-          fAnalysisManager->FillNtupleDColumn(1,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
-          fAnalysisManager->FillNtupleDColumn(1,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
+          fAnalysisManager->FillNtupleDColumn(1,2,aTrack->GetVertexPosition().x()/mm);
+          fAnalysisManager->FillNtupleDColumn(1,3, aTrack->GetVertexPosition().y()/mm);
+          fAnalysisManager->FillNtupleDColumn(1,4, aTrack->GetVertexPosition().z()/mm);
+
+          // fAnalysisManager->FillNtupleDColumn(1,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
+          // fAnalysisManager->FillNtupleDColumn(1,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
+          // fAnalysisManager->FillNtupleDColumn(1,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
           fAnalysisManager->AddNtupleRow(1);}
       //
       // if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {

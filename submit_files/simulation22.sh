@@ -1,9 +1,9 @@
 #!/bin/bash
 #-------------input parameters--------------------------------------------------
 #simulation number
-simNo=18
+simNo=22
 # output Type
-outType=single #single or bunch
+outType=bunch #single or bunch
 BeamlineStatus=on
 #polarimeter geometry
 SetUp=Cal # Pol/Cal/PolCal; Polarimeter, Calorimeter, or both
@@ -13,7 +13,7 @@ convthick=1.75 # thickness of converter target in mm
 # energy of e-beam
 # ypos=195.0055
 rCollimator=${2}
-CaloDistance=10
+CaloDistance=51
 eKin=60
 Espread=0.1 #FWHM Energy spread
 eneType=Gauss # Gauss for Gaussian energy distribution, Mono for mono-energetic
@@ -25,7 +25,7 @@ eneType=Gauss # Gauss for Gaussian energy distribution, Mono for mono-energetic
 #fi
 sigmaE=2.547
 # beam geometry
-NBunch=1200000
+NBunch=100000
 sourceType=Beam #Beam or Point
 if [ "$sourceType" = "Beam" ]
 then
@@ -41,13 +41,13 @@ ePol=1
 #-------------------------------------------------------------------------------
 
 #Name of root output file
-outFile=${SetUp}_${outType}_NBunch_${NBunch}_E_${eKin}_pm_${sigmaE}MeV_sz_${spotSize}_mm_div_${div}_rad_ePol_${ePol}_conv_${convthick}mm_core_${corethick}mm_rCollimator_${rCollimator}_mm_CaloDistance_${CaloDistance}_cm_PrId${1}_new.root
+outFile=${SetUp}_${outType}_NBunch_${NBunch}_E_${eKin}_pm_${sigmaE}MeV_sz_${spotSize}_mm_div_${div}_rad_ePol_${ePol}_conv_${convthick}mm_core_${corethick}mm_rCollimator_${rCollimator}_mm_CaloDistance_${CaloDistance}_cm_PrId${1}.root
 
 #set the environment
 source /cvmfs/sft.cern.ch/lcg/views/LCG_98python3/x86_64-centos7-gcc10-opt/setup.sh
 
 # change parameters in macro
-sed  "s/eKin/${eKin}/g" simulation18.tmp > test${1}.mac
+sed  "s/eKin/${eKin}/g" simulation22.tmp > test${1}.mac
 sed -i  "s/ypos/$ypos/g" test${1}.mac
 sed -i  "s/corethick/$corethick/g" test${1}.mac
 sed -i  "s/convthick/$convthick/g" test${1}.mac

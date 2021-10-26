@@ -9,8 +9,8 @@
 /run/initialize
 
 #-----------geometry-----------------------------
-/leap/det/SetCoreThick 75 mm
-/leap/det/SetConvThick 1.75 mm
+/leap/det/SetCoreThick corethick mm
+/leap/det/SetConvThick convthick mm
 
 /leap/det/Setnumberofcrystals one
 /leap/beamline/Collimator rCollimator mm
@@ -24,10 +24,10 @@
 /polarization/volume/list
 
 #-----------particle-gunlike-------------------------------
-/gps/energy 60 MeV
-/gps/number 100000
+/gps/energy eKin MeV
+/gps/number NBunch
 /gps/particle e-
-/gps/pos/centre 0.0 0.0 -3650.0 mm
+/gps/pos/centre 0.0 0.0 -3650.0 mm 
 
 #---------gps-commands-------------------------------------
 #simply comment if not needed
