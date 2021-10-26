@@ -1,0 +1,8 @@
+executable = ./simulation14.sh
+arguments = $(ProcID) $(eKin)
+
+log = /nfs/dust/ilc/user/fstehr/leap_sims/log/job_$(ProcID).log
+output = /nfs/dust/ilc/user/fstehr/leap_sims/out/job_$(ProcID).out
+error = /nfs/dust/ilc/user/fstehr/leap_sims/err/job_$(ProcID).err
+
+queue 1000 eKin in 0.2 0.4 0.6 0.8 1 1.2 1.4 1.6 1.8 2

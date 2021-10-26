@@ -1,0 +1,8 @@
+executable = ./simulation12.sh
+arguments = $(ProcID) $(ypos)
+
+log = /nfs/dust/ilc/user/fstehr/leap_sims/log/job_$(ProcID).log
+output = /nfs/dust/ilc/user/fstehr/leap_sims/out/job_$(ProcID).out
+error = /nfs/dust/ilc/user/fstehr/leap_sims/err/job_$(ProcID).err
+
+queue 1000 ypos in 220.0055 215.0055 210.0055 205.0055 200.0055 195.0055 190.0055 185.0055 180.0055 175.0055 

@@ -48,7 +48,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
 
-  DetectorConstruction(G4String version);
+  DetectorConstruction(G4String version, G4String beamline);
   ~DetectorConstruction();
 
 public:
@@ -62,8 +62,9 @@ public:
   void SetWorldMaterial (G4String);
   void SetCaloMaterial (G4String);
   void SetCrystalnumber (G4String);
-
-  void UpdateGeometry();
+  void SetCollimatorRadius (G4double);
+  void SetCaloDistance (G4double);
+  void UpdateGeometry ();
 
 public:
 
@@ -114,7 +115,10 @@ private:
   DetectorMessenger* fMessenger;
 
   G4String versionType;
+  G4String beamlineStatus;
   G4String CrystalNumber;
+  G4double dCalo;
+  G4double RCollimator;
 
 };
 

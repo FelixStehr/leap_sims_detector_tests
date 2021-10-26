@@ -60,12 +60,15 @@ class DetectorMessenger: public G4UImessenger
 
     G4UIdirectory*             fLeapDir;
     G4UIdirectory*             fDetDir;
+    G4UIdirectory*             fBeamlineDir;
     G4UIcmdWithAString*        fConvMaterCmd;
     G4UIcmdWithADoubleAndUnit* fConvZCmd;
     G4UIcmdWithADoubleAndUnit* fCoreZCmd;
     G4UIcmdWithADoubleAndUnit* fSizeXYCmd;
     G4UIcmdWithAString* fCrystalnumberCmd;
     G4UIcmdWithoutParameter*   fUpdateCmd;
+    G4UIcmdWithADoubleAndUnit*   fCollimatorCmd;
+    G4UIcmdWithADoubleAndUnit*   fdCaloCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

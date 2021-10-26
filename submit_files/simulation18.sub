@@ -1,0 +1,8 @@
+executable = ./simulation18.sh
+arguments = $(ProcID) $(rCollimator)
+
+log = /nfs/dust/ilc/user/fstehr/leap_sims/log/job_$(ProcID).log
+output = /nfs/dust/ilc/user/fstehr/leap_sims/out/job_$(ProcID).out
+error = /nfs/dust/ilc/user/fstehr/leap_sims/err/job_$(ProcID).err
+
+queue 10000 rCollimator in 0.5 

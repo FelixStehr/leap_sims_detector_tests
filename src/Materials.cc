@@ -75,10 +75,14 @@ void Materials::DefineMaterials()
   Tungsten = nistManager->FindOrBuildMaterial("G4_W");
   Copper = nistManager->FindOrBuildMaterial("G4_Cu");
   Lead = nistManager->FindOrBuildMaterial("G4_Pb");
+  Concrete = nistManager->FindOrBuildMaterial("G4_CONCRETE");
+  StainlessSteel=nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
 
   G4Material* PbO = nistManager->FindOrBuildMaterial("G4_LEAD_OXIDE");
   G4Material* SiO2 = nistManager->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
   G4Material* K2O = nistManager->FindOrBuildMaterial("G4_POTASSIUM_OXIDE");
+
+
 
   /*
   // CsI (Cesiumiodide for the scintillator. Optical properties still need to be defined !!! )
