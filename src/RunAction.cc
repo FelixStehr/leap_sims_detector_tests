@@ -196,7 +196,7 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeter", "vacstep3");
      fAnalysisManager->CreateNtupleIColumn("pdg");
      fAnalysisManager->CreateNtupleDColumn("E");
-     // fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
      // fAnalysisManager->CreateNtupleDColumn("x");
      // fAnalysisManager->CreateNtupleDColumn("y");
      // fAnalysisManager->CreateNtupleDColumn("z");
@@ -206,13 +206,13 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeterIn", "vacstep4");
      fAnalysisManager->CreateNtupleIColumn("pdg");
      fAnalysisManager->CreateNtupleDColumn("E");
-     // fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     //fAnalysisManager->CreateNtupleDColumn("CopyNumber");
      fAnalysisManager->CreateNtupleDColumn("Vx");//it is the vertex position of the detected particle
      fAnalysisManager->CreateNtupleDColumn("Vy");//it is the vertex position of the detected particle
      fAnalysisManager->CreateNtupleDColumn("Vz");//it is the vertex position of the detected particle
-     // fAnalysisManager->CreateNtupleDColumn("x");
-     // fAnalysisManager->CreateNtupleDColumn("y");
-     // fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
      fAnalysisManager->FinishNtuple();}
 
 

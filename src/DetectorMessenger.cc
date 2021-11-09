@@ -96,7 +96,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fCollimatorCmd = new G4UIcmdWithADoubleAndUnit("/leap/beamline/Collimator",this);
   fCollimatorCmd->SetGuidance("Set radius of the Collimator hole");
   fCollimatorCmd->SetParameterName("RCollimator",false);
-  fCollimatorCmd->SetRange("RCollimator>=0.");
+  //fCollimatorCmd->SetRange("RCollimator>=0.");
   fCollimatorCmd->SetUnitCategory("Length");
   fCollimatorCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 

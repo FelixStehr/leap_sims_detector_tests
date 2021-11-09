@@ -1,0 +1,8 @@
+executable = ./simulation25.sh
+arguments = $(ProcID) $(CaloDistance)
+
+log = /nfs/dust/ilc/user/fstehr/leap_sims/log/job_$(ProcID).log
+output = /nfs/dust/ilc/user/fstehr/leap_sims/out/job_$(ProcID).out
+error = /nfs/dust/ilc/user/fstehr/leap_sims/err/job_$(ProcID).err
+
+queue 1 CaloDistance in 40 45 50 51 55 60 65 70 75 80 85 90 95 100
