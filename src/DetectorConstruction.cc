@@ -766,7 +766,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   fconcreteHoleLV->SetVisAttributes(ConcreteHoleVis);
 
 
-
+   if (RCollimator>0){
    // copper collimator
    auto fcollimatorS= new G4Box("collimator",         // Name
                                 concreteHolewidth/2.,     // x size
@@ -809,7 +809,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
-
+   }
    //
    // beam line tube
    auto fbeamlineTubeS= new G4Tubs("beamline", //name
