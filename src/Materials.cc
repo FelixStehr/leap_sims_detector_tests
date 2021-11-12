@@ -77,6 +77,7 @@ void Materials::DefineMaterials()
   Lead = nistManager->FindOrBuildMaterial("G4_Pb");
   Concrete = nistManager->FindOrBuildMaterial("G4_CONCRETE");
   StainlessSteel=nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
+  PVC=nistManager->FindOrBuildMaterial("G4_POLYVINYL_CHLORIDE");
 
   G4Material* PbO = nistManager->FindOrBuildMaterial("G4_LEAD_OXIDE");
   G4Material* SiO2 = nistManager->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
@@ -125,6 +126,13 @@ void Materials::DefineMaterials()
   // Vacuum
   Galactic = new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
                   kStateGas, 2.73*kelvin, 3.e-18*pascal);
+
+  // PMT Glass
+  PMTGlass = new G4Material ("Glass", density=2.20*g/cm3, ncomponents=2);
+  PMTGlass->AddElement (O,  2./3.);
+  PMTGlass->AddElement (Si, 1./3.);
+
+
 
 
   //*************************************************************************************
@@ -242,6 +250,22 @@ void Materials::DefineMaterials()
   G4MaterialPropertiesTable *MPT_Al = new G4MaterialPropertiesTable();
   MPT_Al->AddProperty ("REFLECTIVITY", PE_Al, RE_Al, 8);
   Aluminium->SetMaterialPropertiesTable(MPT_Al);
+
+
+  //-------------------------------------------------------------------------------------
+  // PMTGlass (values taken from QuaSi)
+  //-------------------------------------------------------------------------------------
+  G4double PE_Glass[2] = { 1.38*eV,  6.7*eV }; // energy [eV]
+  G4double RI_Glass[2] = { 1.5,      1.5  };    // refractive index
+  G4double AB_Glass[2] = { 10.*m,   10.*m };    // abs. length
+  G4MaterialPropertiesTable* MPT_Glass = new G4MaterialPropertiesTable();
+  MPT_Glass->AddProperty ("RINDEX",    PE_Glass, RI_Glass, 2);
+  MPT_Glass->AddProperty ("ABSLENGTH", PE_Glass, AB_Glass, 2);
+  PMTGlass->SetMaterialPropertiesTable (MPT_Glass);
+
+
+
+
 
   // Print materials
   G4cout << *(G4Material::GetMaterialTable()) << G4endl;

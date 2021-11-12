@@ -76,6 +76,7 @@ public:
   const G4VPhysicalVolume* GetVacStep4PV() const;
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
+  const G4VPhysicalVolume* GetVenylPV() const;
 
 
   G4double           GetWorldSize()  {return fWorldSize;};
@@ -102,6 +103,7 @@ private:
   G4VPhysicalVolume*   fAlAirGapPV;
   G4VPhysicalVolume*   fVirtCaloPV;
   G4VPhysicalVolume*   fCaloCellPV;
+  G4VPhysicalVolume*   fVenylPV;
 
 
   G4double              fSizeXY;
@@ -139,6 +141,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetAluwrapPV() const {
   return fAluwrapPV;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetVenylPV() const {
+  return fVenylPV;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 

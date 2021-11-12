@@ -239,7 +239,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
     else if (versionType=="Cal"){
       auto VacStep3PV=fDetector->GetVacStep3PV();
       auto VacStep4PV=fDetector->GetVacStep4PV();
-      auto AluwrapPV =fDetector->GetAluwrapPV();
+      // auto AluwrapPV =fDetector->GetAluwrapPV();
+      auto VenylPV =fDetector->GetVenylPV();
 
       // if ( postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
       if ( postvolume == VacStep3PV && prevolume !=VacStep3PV) {
@@ -247,15 +248,17 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           fAnalysisManager->FillNtupleIColumn(0,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
           fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/MeV);
           // fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
-          fAnalysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(2));  // here the 1 means that it takes the copy numer of its mother volume
+          fAnalysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(5));  // here the 1 means that it takes the copy numer of its mother volume
           //
           // fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
           // fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);
           // fAnalysisManager->FillNtupleDColumn(0,5, aStep->GetPostStepPoint()->GetPosition().z()/mm);
-          fAnalysisManager->AddNtupleRow(0);}
+          fAnalysisManager->AddNtupleRow(0);
+
+          aTrack->SetTrackStatus(fStopAndKill); } // here all particles which are detected get killed
 
      // if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
-      if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding()!=0) {
+      if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VenylPV && aTrack->GetParticleDefinition()->GetPDGEncoding()!=0) {
           // fill ntuple id=0
           fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
