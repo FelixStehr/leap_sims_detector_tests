@@ -196,7 +196,8 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeter", "vacstep3");
      fAnalysisManager->CreateNtupleIColumn("pdg");
      fAnalysisManager->CreateNtupleDColumn("E");
-     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumberCrystal");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumberAnode");
      // fAnalysisManager->CreateNtupleDColumn("x");
      // fAnalysisManager->CreateNtupleDColumn("y");
      // fAnalysisManager->CreateNtupleDColumn("z");

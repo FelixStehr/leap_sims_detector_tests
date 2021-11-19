@@ -78,6 +78,7 @@ void Materials::DefineMaterials()
   Concrete = nistManager->FindOrBuildMaterial("G4_CONCRETE");
   StainlessSteel=nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
   PVC=nistManager->FindOrBuildMaterial("G4_POLYVINYL_CHLORIDE");
+  Plastic_SC = nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
 
   G4Material* PbO = nistManager->FindOrBuildMaterial("G4_LEAD_OXIDE");
   G4Material* SiO2 = nistManager->FindOrBuildMaterial("G4_SILICON_DIOXIDE");

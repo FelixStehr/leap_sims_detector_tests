@@ -249,6 +249,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/MeV);
           // fAnalysisManager->FillNtupleDColumn(0,1,aStep->GetPostStepPoint()->GetTotalEnergy()/eV );
           fAnalysisManager->FillNtupleDColumn(0,2,theTouchable->GetReplicaNumber(5));  // here the 1 means that it takes the copy numer of its mother volume
+          fAnalysisManager->FillNtupleDColumn(0,3,theTouchable->GetReplicaNumber());   // here the number of the Anode 1 to 4 is saved.
           //
           // fAnalysisManager->FillNtupleDColumn(0,3, aStep->GetPostStepPoint()->GetPosition().x()/mm);
           // fAnalysisManager->FillNtupleDColumn(0,4, aStep->GetPostStepPoint()->GetPosition().y()/mm);

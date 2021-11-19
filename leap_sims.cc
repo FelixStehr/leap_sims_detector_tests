@@ -89,7 +89,7 @@ for ( G4int i=1; i<argc; i=i+2 ) {
 }
   if(outFile.empty()){outFile = "result.root";}
   if (outType.empty()){outType = "bunch";}
-  if (version.empty()){version = "Pol";}
+  if (version.empty()){version = "Cal";}
   if (beamline.empty()){beamline = "off";}
 
   // Detect interactive mode (if no macro provided) and define UI session

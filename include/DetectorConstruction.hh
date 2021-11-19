@@ -64,6 +64,7 @@ public:
   void SetCrystalnumber (G4String);
   void SetCollimatorRadius (G4double);
   void SetCaloDistance (G4double);
+  void SetSFStatus (G4String);
   void UpdateGeometry ();
 
 public:
@@ -77,7 +78,7 @@ public:
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
   const G4VPhysicalVolume* GetVenylPV() const;
-
+  const G4VPhysicalVolume* GetVacStep5PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
   G4double           GetSizeXY()  {return fSizeXY;};
@@ -104,7 +105,7 @@ private:
   G4VPhysicalVolume*   fVirtCaloPV;
   G4VPhysicalVolume*   fCaloCellPV;
   G4VPhysicalVolume*   fVenylPV;
-
+  G4VPhysicalVolume*   fVacStepPV5;
 
   G4double              fSizeXY;
   G4double              fCoreThick;
@@ -121,6 +122,7 @@ private:
   G4String CrystalNumber;
   G4double dCalo;
   G4double RCollimator;
+  G4String SFStatus;
 
 };
 
@@ -144,6 +146,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetAluwrapPV() const {
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetVenylPV() const {
   return fVenylPV;
+}
+inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep5PV() const {
+  return fVacStepPV5;
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
