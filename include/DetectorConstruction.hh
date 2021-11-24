@@ -77,7 +77,7 @@ public:
   const G4VPhysicalVolume* GetVacStep4PV() const;
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
-  const G4VPhysicalVolume* GetVenylPV() const;
+  const G4VPhysicalVolume* GetVinylPV() const;
   const G4VPhysicalVolume* GetVacStep5PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
@@ -86,7 +86,7 @@ public:
   G4double           GetConvZ()   {return fConvThick;};
   G4Material*        GetMaterial()   {return fConvMaterial;};
   G4String           GetCrystalNumber(){return CrystalNumber;};
-
+  G4String           GetSFStatus(){return SFStatus;};
   void               PrintParameters();
 
 private:
@@ -144,7 +144,7 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetDetectorPV() const {
 inline const G4VPhysicalVolume* DetectorConstruction::GetAluwrapPV() const {
   return fAluwrapPV;
 }
-inline const G4VPhysicalVolume* DetectorConstruction::GetVenylPV() const {
+inline const G4VPhysicalVolume* DetectorConstruction::GetVinylPV() const {
   return fVenylPV;
 }
 inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep5PV() const {

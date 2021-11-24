@@ -82,15 +82,16 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   RCollimator = 2.5*mm;
 
   SetConvMaterial("G4_W");
-  if(beamlineStatus=="on"){
-    SetWorldMaterial("Air");}
-  else if(beamlineStatus=="off"){
-    SetWorldMaterial("Galactic");}
-  else {
-    SetWorldMaterial("Galactic");
-    G4cout << "NO VALID IMPUT FOR BEAMLINE: beamlineStatus set to off!->all simulations in vacuum"<< G4endl;
-     }
+  // if(beamlineStatus=="on"){
+    // SetWorldMaterial("Air");}
+  // else if(beamlineStatus=="off"){
+    // SetWorldMaterial("Galactic");}
+  // else {
+  //   SetWorldMaterial("Galactic");
+  //   G4cout << "NO VALID IMPUT FOR BEAMLINE: beamlineStatus set to off!->all simulations in vacuum"<< G4endl;
+  //    }
   SetCaloMaterial("TF101");
+  SetWorldMaterial("Air");
 
   fMessenger = new DetectorMessenger(this);
 }
@@ -316,7 +317,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     VacStep3Vis->SetForceSolid(true);
 
     G4VisAttributes * PMTmountVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,0/255., 0.95));
-    PMTmountVis->SetVisibility(true);
+    PMTmountVis->SetVisibility(false);
     PMTmountVis->SetLineWidth(1);
     //PMTmountVis->SetForceSolid(true);
 
@@ -359,7 +360,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     AluWindowVis->SetLineWidth(2);
     AluWindowVis->SetForceSolid(true);
 
-    G4VisAttributes * CollimatorVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255.));
+    G4VisAttributes * CollimatorVis= new G4VisAttributes( G4Colour(205/255. ,55/255. ,0/255.));
     CollimatorVis->SetVisibility(true);
     CollimatorVis->SetLineWidth(1);
     CollimatorVis->SetForceSolid(true);
@@ -368,6 +369,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CollimatorVis->SetVisibility(true);
     CollimatorVis->SetLineWidth(1);
     CollimatorVis->SetForceSolid(true);
+
+    G4VisAttributes * BleiVis= new G4VisAttributes( G4Colour(238/255. ,238/255. ,0/255., 0.4));
+    BleiVis->SetVisibility(true);
+    BleiVis->SetLineWidth(1);
+  //  BleiVis->SetForceSolid(true);
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1163,7 +1169,8 @@ if(SFStatus=="true"){
                                  false,                     //no boolean operat
                                  0);                 //copy number
 
-
+   fBlei2LV->SetVisAttributes(BleiVis);
+   fBlei1LV->SetVisAttributes(BleiVis);
 
    //
    // beam line tube

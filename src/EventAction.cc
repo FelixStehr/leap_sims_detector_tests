@@ -65,6 +65,16 @@ void EventAction::BeginOfEventAction(const G4Event*)
       fEnergyCalo =0.;
       fPhotonEnergySum=0.;
       fGammaEnergyIn=0.;
+
+      // here again the special case of two crystals
+      Ecalo0=0.;
+      Egamma0=0.;
+      Erest0=0.;
+
+      Ecalo1=0.;
+      Egamma1=0.;
+      Erest1=0.;
+
      }
      else if(versionType=="PolCal"){
       fEnergySum = 0.; // Sum of energy of particles behind magnet
@@ -95,10 +105,22 @@ void EventAction::EndOfEventAction(const G4Event*)
      analysisManager->AddNtupleRow(0);
     }
     else if(versionType=="Cal"){
-     analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
-     analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
-     analysisManager->FillNtupleDColumn(0,2,fGammaEnergyIn);
+     // analysisManager->FillNtupleDColumn(0,0, fEnergyCalo);
+     // analysisManager->FillNtupleDColumn(0,1,fPhotonEnergySum);
+     // analysisManager->FillNtupleDColumn(0,2,fGammaEnergyIn);
+     // analysisManager->AddNtupleRow(0);
+
+     analysisManager->FillNtupleDColumn(0,0,Ecalo0);
+     analysisManager->FillNtupleDColumn(0,1,Eelectron0);
+     analysisManager->FillNtupleDColumn(0,2,Egamma0);
+     analysisManager->FillNtupleDColumn(0,3,Erest0);
+
+     analysisManager->FillNtupleDColumn(0,4,Ecalo1);
+     analysisManager->FillNtupleDColumn(0,5,Eelectron1);
+     analysisManager->FillNtupleDColumn(0,6,Egamma1);
+     analysisManager->FillNtupleDColumn(0,7,Erest1);
      analysisManager->AddNtupleRow(0);
+
     }
     else if(versionType=="PolCal"){
      analysisManager->FillNtupleDColumn(0,0, fEnergySum);

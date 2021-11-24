@@ -56,6 +56,21 @@ public:
   void AddPhotonEnergy(G4double EPhoton);
   void AddGammaEnergy(G4double EGamma);
 
+  // here again just the special case for the two cristals
+  void AddEcalo0(G4double Ec0);
+  void AddEelectron0(G4double Ee0);
+  void AddEgamma0(G4double Eg0);
+  void AddErest0(G4double Er0);
+
+  void AddEcalo1(G4double Ec1);
+  void AddEelectron1(G4double Ee1);
+  void AddEgamma1(G4double Eg1);
+  void AddErest1(G4double Er1);
+
+
+
+
+
 private:
   RunAction* fRunAction;
 
@@ -68,6 +83,21 @@ private:
   G4double fGammaEnergyIn;
   G4String outputType;
   G4String versionType;
+
+  //here 2 Chrystals CP 0 and 1
+  G4double Ecalo0;
+  G4double Eelectron0;
+  G4double Egamma0;
+  G4double Erest0;
+
+  G4double Ecalo1;
+  G4double Eelectron1;
+  G4double Egamma1;
+  G4double Erest1;
+
+
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -91,4 +121,44 @@ inline void EventAction::AddPhotonEnergy(G4double EPhoton) { //Photon Energy whi
 inline void EventAction::AddGammaEnergy(G4double EGamma) { //Gamma Energy on the entrace of the crystals
   fGammaEnergyIn+= EGamma;
 }
+
+
+// Here special case of two crystals
+
+// Crystal 0
+inline void EventAction::AddEcalo0(G4double Ec0) { //Gamma Energy on the entrace of the crystals
+  Ecalo0+= Ec0;
+}
+
+inline void EventAction::AddEelectron0(G4double Ee0) { //Gamma Energy on the entrace of the crystals
+  Eelectron0+= Ee0;
+}
+
+inline void EventAction::AddEgamma0(G4double Eg0) { //Gamma Energy on the entrace of the crystals
+  Egamma0+= Eg0;
+}
+
+inline void EventAction::AddErest0(G4double Er0) { //Gamma Energy on the entrace of the crystals
+  Erest0+= Er0;
+}
+
+
+// Crystal 1
+inline void EventAction::AddEcalo1(G4double Ec1) { //Gamma Energy on the entrace of the crystals
+  Ecalo1+= Ec1;
+}
+
+inline void EventAction::AddEelectron1(G4double Ee1) { //Gamma Energy on the entrace of the crystals
+  Eelectron1+= Ee1;
+}
+
+inline void EventAction::AddEgamma1(G4double Eg1) { //Gamma Energy on the entrace of the crystals
+  Egamma1+= Eg1;
+}
+
+inline void EventAction::AddErest1(G4double Er1) { //Gamma Energy on the entrace of the crystals
+  Erest1+= Er1;
+}
+
+
 #endif
