@@ -41,6 +41,9 @@ private:
   G4Material* Aluminium;
   G4Material* Concrete;
   G4Material* StainlessSteel;
+  G4Material* PVC;
+  G4Material* PMTGlass;
+  G4Material* Plastic_SC;
 
   // G4Material* Grease; ///< Optical grease between PMT window and quartz stick
 

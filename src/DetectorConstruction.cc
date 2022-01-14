@@ -77,19 +77,22 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   fConvThick = 1.75*mm;
   fWorldSize = 8*m;
   CrystalNumber= "one";
+  SFStatus ="true";
   dCalo = 10*cm;
   RCollimator = 2.5*mm;
+  CaloXpos = 0.*mm;
 
   SetConvMaterial("G4_W");
-  if(beamlineStatus=="on"){
-    SetWorldMaterial("Air");}
-  else if(beamlineStatus=="off"){
-    SetWorldMaterial("Galactic");}
-  else {
-    SetWorldMaterial("Galactic");
-    G4cout << "NO VALID IMPUT FOR BEAMLINE: beamlineStatus set to off!->all simulations in vacuum"<< G4endl;
-     }
+  // if(beamlineStatus=="on"){
+    // SetWorldMaterial("Air");}
+  // else if(beamlineStatus=="off"){
+    // SetWorldMaterial("Galactic");}
+  // else {
+  //   SetWorldMaterial("Galactic");
+  //   G4cout << "NO VALID IMPUT FOR BEAMLINE: beamlineStatus set to off!->all simulations in vacuum"<< G4endl;
+  //    }
   SetCaloMaterial("TF101");
+  SetWorldMaterial("Air");
 
   fMessenger = new DetectorMessenger(this);
 }
@@ -124,7 +127,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double  maggap2 = 12.5*mm;
   G4double  absrad  = fSizeXY/2.;
   G4double shieldrad=75.0*mm;
-  G4double vacthick = 1.0*mm;
+  G4double vacthick = 1.0*mm;//4.*mm;
   G4double corethick = fCoreThick;
   G4double convthick = fConvThick;
   G4double  coilthick = corethick + 25.0*mm;
@@ -135,24 +138,44 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // Calorimeter
   //
+
   G4double detthick = 45.*cm; // crystal size
   G4double detx = 3.8 *cm;
   G4double dety = 3.8 *cm;
 
-  G4double alairgapthick = 0.001 *mm;    // thickness of the air gap between the aluwrapping and the crystal
+
+  G4double AirgabCrystalPMTthick =1.*mm;//4.*mm;
+  G4double AirgabCrystalPMTxy= 27.*mm; // entrance size of the PMT mount
+  G4double PMTGlassthick=0.5 *mm;//4.*mm;
+  G4double PMTGlassxy   = 25. *mm;
+  G4double DetVacstepthick= 1. *mm; //4.*mm;// here VacStep as detector volume later kathod material
+  G4double DetVacstepxy= PMTGlassxy; //18
+  G4double PMTmountlength = AirgabCrystalPMTthick+PMTGlassthick+DetVacstepthick;
+  G4double PMTmountxy = detx;
+
+  G4double alairgapthick = 0.001 *mm; //4.*mm;   // thickness of the air gap between the aluwrapping and the crystal
   G4double alairgapx = detx + 2*alairgapthick;
   G4double alairgapy = dety + 2*alairgapthick;
-  G4double alairgaplength = detthick + alairgapthick;
+  G4double alairgaplength = detthick + alairgapthick + PMTmountlength;
 
-  G4double aluwrapthick = 0.01  *mm;   // wikipedia: alu foil thickness between 0.004 and 0.02 mm
+  G4double aluwrapthick =0.01  *mm;//4.*mm;  // wikipedia: alu foil thickness between 0.004 and 0.02 mm
   G4double aluwrapx = alairgapx + 2*aluwrapthick;
   G4double aluwrapy = alairgapy + 2*aluwrapthick;
-  G4double aluwraplength = alairgaplength + aluwrapthick + vacthick;
+  G4double aluwraplength = alairgaplength + aluwrapthick;
+
+  G4double venylfoilthick = 0.1 *mm;//4.*mm; // just a guess becouse we have more than 1 layer
+  G4double venylfoilxy = aluwrapx + 2* venylfoilthick;
+  G4double venylfoillength = aluwraplength + venylfoilthick;
 
   //defining the size of the Calorimeterzell and the virtual calorimeter (mother volume of the calorimetercells)
   //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
-  G4double calorcellxy = aluwrapx;
-  G4double calorcelllength = aluwraplength + vacthick;
+  //G4double calorcellxy = aluwrapx;
+
+  G4double calorcellxy;
+  if (venylfoilxy<= 4*cm){
+    calorcellxy= 4*cm;}// here I took 4cm becouse in the experiment wie assumed that the crystal centres are 4cm apart
+  else{ calorcellxy=venylfoilxy;}
+  G4double calorcelllength = venylfoillength + vacthick;
   G4double virtcalorxy;
 
   if (CrystalNumber == "one"){
@@ -160,6 +183,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   }
   else if (CrystalNumber == "nine" || CrystalNumber == "four" ){
     virtcalorxy = 3*calorcellxy;
+  }
+  else if (CrystalNumber == "two"){
+    virtcalorxy = 2*calorcellxy;
   }
   else {
     virtcalorxy = calorcellxy;
@@ -176,8 +202,47 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     caloZposition = virtcalorlength/2+dCalo;}
   else {caloZposition = (magthick+virtcalorlength)/2+dCalo;}
 
-  G4double vac3x = alairgapx;// this version is to place the vacstep in the aluwrapping
-  G4double vac3y = alairgapy; // this version is to place the vacstep in the aluwrapping
+  //
+  //Scintillator fingers dimensions
+  //
+  G4double SFlength = 60*mm; // Scintillator dimensions just roughly measured
+  G4double SFx = 4* mm;
+  G4double SFy = 13* mm;
+
+  G4double SFairgapthick = 0.001 *mm;
+  G4double SFairgapx = SFx + 2*SFairgapthick;
+  G4double SFairgapy = SFy + 2*SFairgapthick;
+  G4double SFairgaplength = SFlength + SFairgapthick;
+
+  G4double SFAluthick = 0.01 *mm;
+  G4double SFAlux =  SFairgapx + 2*SFAluthick   ;
+  G4double SFAluy = SFairgapy + 2*SFAluthick    ;
+  G4double SFAlulength = SFairgaplength + SFAluthick;
+
+  G4double SFVacstepthick = 1 *mm;
+  G4double SFVacstepx =  SFAlux;
+  G4double SFVacstepy =  SFAluy;
+
+  G4double SFVinylthick = 0.1 *mm;
+  G4double SFVinylx= SFAlux + 2*SFVinylthick  ;
+  G4double SFVinyly= SFAluy + 2*SFVinylthick  ;
+  G4double SFVinyllength = SFAlulength + SFVinylthick + SFVacstepthick;
+
+  G4double SFpositonZ = 420*mm - SFVinylx/2;
+  G4double Intersectiondis = 10*mm;     // Position were the electron beam hits the SF from its edge
+  G4double SFpositonx = -(SFVinyllength/2.-Intersectiondis)/sqrt(2);
+  G4double SFpositony = SFpositonx;
+
+
+  // Rotation Matrix for the Scintilator
+  G4RotationMatrix* SFRotation = new G4RotationMatrix();
+
+  SFRotation->rotateY(90.*deg);
+  SFRotation->rotateX(-45.*deg);
+  // SFRotation->rotateZ(45.*deg);
+
+
+
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Get materials
@@ -193,6 +258,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* Concrete  = allMaterials->GetMat("G4_CONCRETE");
   G4Material* StainlessSteel  = allMaterials->GetMat("G4_STAINLESS-STEEL");
   G4Material* Copper = allMaterials->GetMat("G4_Cu");
+  G4Material* Venyl = allMaterials->GetMat("G4_POLYVINYL_CHLORIDE");
+  G4Material* PMTGlass = allMaterials->GetMat("Glass");
+  G4Material* SFMat = allMaterials->GetMat("G4_PLASTIC_SC_VINYLTOLUENE"); // not sure if it is the right material
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //VisAttributes
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,19 +298,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //Calorimeter
   //
-    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    G4VisAttributes * AirVis= new G4VisAttributes( G4Colour(0/255. ,255/255. ,255/255. ));
     AirVis->SetVisibility(true);
     AirVis->SetLineWidth(2);
-    AirVis->SetForceWireframe( true );
-    // AirVis->SetForceSolid(false);
+    // AirVis->SetForceWireframe( true );
+    AirVis->SetForceSolid(true);
 
 
-    G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(119/255. ,136/255. ,153/255. ));
+    G4VisAttributes * AluVis= new G4VisAttributes( G4Colour(87/255. ,87/255. ,87/255. ));
     AluVis->SetVisibility(true);
     AluVis->SetLineWidth(2);
-    AluVis->SetForceSolid(false);
+    AluVis->SetForceSolid(true);
 
     G4VisAttributes * CrystalVis= new G4VisAttributes( G4Colour(224/255. ,255/255. ,255/255. ));
+    // G4VisAttributes * CrystalVis= new G4VisAttributes( G4Colour(255/255. ,193/255. ,193/255. ));
     CrystalVis->SetVisibility(true);
     CrystalVis->SetLineWidth(2);
     CrystalVis->SetForceSolid(true);
@@ -251,6 +320,24 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     VacStep3Vis->SetVisibility(true);
     VacStep3Vis->SetLineWidth(1);
     VacStep3Vis->SetForceSolid(true);
+
+    G4VisAttributes * PMTmountVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,0/255., 0.95));
+    PMTmountVis->SetVisibility(false);
+    PMTmountVis->SetLineWidth(1);
+    //PMTmountVis->SetForceSolid(true);
+
+
+    G4VisAttributes * VenyfoilVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255. ));
+    VenyfoilVis->SetVisibility(true);
+    VenyfoilVis->SetLineWidth(1);
+    VenyfoilVis->SetForceSolid(true);
+
+    G4VisAttributes * GlassVis= new G4VisAttributes( G4Colour(0/255. ,0/255. ,205/255. ));
+    GlassVis->SetVisibility(true);
+    GlassVis->SetLineWidth(1);
+    GlassVis->SetForceSolid(true);
+
+
 
 
   //
@@ -278,7 +365,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     AluWindowVis->SetLineWidth(2);
     AluWindowVis->SetForceSolid(true);
 
-    G4VisAttributes * CollimatorVis= new G4VisAttributes( G4Colour(255/255. ,0/255. ,255/255.));
+    G4VisAttributes * CollimatorVis= new G4VisAttributes( G4Colour(205/255. ,55/255. ,0/255.));
     CollimatorVis->SetVisibility(true);
     CollimatorVis->SetLineWidth(1);
     CollimatorVis->SetForceSolid(true);
@@ -287,6 +374,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     CollimatorVis->SetVisibility(true);
     CollimatorVis->SetLineWidth(1);
     CollimatorVis->SetForceSolid(true);
+
+    G4VisAttributes * BleiVis= new G4VisAttributes( G4Colour(238/255. ,238/255. ,0/255., 0.4));
+    BleiVis->SetVisibility(true);
+    BleiVis->SetLineWidth(1);
+  //  BleiVis->SetForceSolid(true);
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -493,7 +585,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  // Calorimeter geometry
+  // Calorimeter geometrys
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if (versionType == "Cal" || versionType == "PolCal"){
 
@@ -514,7 +606,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "virtualCalorimeter");       //its name
 
   fVirtCaloPV = new G4PVPlacement(0,                   //no rotation: 0 or rotation 90 deg around x axis : myRotaion
-                         G4ThreeVector(0.,0.,caloZposition),    //its position
+                         G4ThreeVector(calorcellxy/2+CaloXpos,0.,caloZposition),    //if CaloXpos =0 the crystal with the square PMT is in the centre of the beam
                                  fVirtCaloLV,            //its logical volume
                                  "virtualCalorimeter",                 //its name
                                 LogicalWorld,               //its mother
@@ -523,7 +615,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   fVirtCaloLV->SetVisAttributes(G4VisAttributes::GetInvisible());
 
-  //
+
+
   // Calorimeter cells (placing (for now) 9 calorimeter cells in the virtual calorimeter)
   //
   auto fCaloCellS= new G4Box("physicalcalorimeter",  //Name
@@ -576,7 +669,47 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   }
   }
 
+  else if(CrystalNumber=="two"){
+  //the array for the placement of the 2 calorimetercells in the virtual calorimeter
+  G4double CalorRX4[2]={-calorcellxy/2,calorcellxy/2};
+  G4double CalorRY4[2]={0,0};
+  for (G4int i=0;i<=1;i++){
+  fCaloCellPV = new G4PVPlacement(0,		       //no rotation
+               G4ThreeVector(CalorRX4[i],CalorRY4[i],0),  //its position
+               fCaloCellLV,            //its logical volume
+              "physicalcalorimeter",    //its name
+               fVirtCaloLV,               //its mother
+               false,                     //no boolean operat
+               i);                        //copy number       //copy number
+  }
+  }
+
+
   fCaloCellLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+
+
+
+
+  auto fVenylS= new G4Box("Venylfoil",  //Name
+                                venylfoilxy/2.,   // x size
+                                venylfoilxy/2.,     // y size
+                                venylfoillength/2.); // z size
+
+
+  auto fVenylLV = new G4LogicalVolume(fVenylS,    //its solid
+                                         Venyl,    //its material
+                                         "Venylfoil");       //its name
+
+   fVenylPV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,vacthick/2),    //its position // old 0.,0.,-vacthick/2
+                                 fVenylLV,            //its logical volume
+                                 "Venylfoil",                 //its name
+                                 fCaloCellLV,               //its mother
+                                 false,                     //no boolean operat
+                                     0);                        //copy number
+
+  fVenylLV->SetVisAttributes(VenyfoilVis);
 
   // Alu-wrapping
   //
@@ -591,10 +724,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "AluWrapping");       //its name
 
   fAluwrapPV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,vacthick/2),    //its position // old 0.,0.,-vacthick/2
+                         G4ThreeVector(0.,0.,venylfoilthick/2),    // its positon
                                  fAluwrapLV,            //its logical volume
                                  "AluWrapping",                 //its name
-                                 fCaloCellLV,               //its mother
+                                 fVenylLV,               //its mother
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
@@ -614,7 +747,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                         "AlAirGap");       //its name
 
   fAlAirGapPV = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,-(vacthick-aluwrapthick)/2),    //its position // old 0.,0.,aluwrapthick/2
+                        G4ThreeVector(0.,0.,aluwrapthick/2),    //its position
                                 fAlAirGapLV,            //its logical volume
                                 "AlAirGap",                 //its name
                                 fAluwrapLV,               //its mother
@@ -623,10 +756,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   // fAlAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
   fAlAirGapLV->SetVisAttributes(AirVis);
+
   //
-  // Detector(in this case a crystal)
+  // Crystal (aka Detector)
   //
-  //Detector Box shape as in E166
   auto fDetectorS= new G4Box("Detector",  //Name
                                detx/2.,   // x size
                                dety/2.,     // y size
@@ -638,7 +771,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                         "Detector");       //its name
 
   fDetectorPV = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,alairgapthick/2),    //its position
+                        G4ThreeVector(0.,0.,(alairgapthick-PMTmountlength)/2),    //its position
                                 fDetectorLV,            //its logical volume
                                 "Detector",                 //its name
                                 fAlAirGapLV,               //its mother
@@ -648,22 +781,92 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   fDetectorLV->SetVisAttributes(CrystalVis);
 
   //
-  //vacuum step 3
+  // PMTmount
   //
+  auto fPMTmountS= new G4Box("PMTmount",  //Name
+                               alairgapx/2.,  //PMTmountxy/2.,   // x size
+                               alairgapx/2.,  //PMTmountxy/2.,     // y size
+                               PMTmountlength/2.); // z size
+
+
+  auto fPMTmountLV = new G4LogicalVolume(fPMTmountS,    //its solid
+                                        Venyl,    //its material
+                                        "PMTmount");       //its name
+
+  auto fPMTmountPV = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,(alairgapthick+detthick)/2),    //its position
+                                fPMTmountLV,            //its logical volume
+                                "PMTmount",                 //its name
+                                fAlAirGapLV,               //its mother
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+  fPMTmountLV->SetVisAttributes(PMTmountVis);
+
+  //
+  // Space of Air between the Crystal and the PMT
+  //
+
+  auto fAirgabCrystalPMTS= new G4Box("AirgabCrystalPMT",  //Name
+                               detx/2,//AirgabCrystalPMTxy/2.,   // x size
+                               detx/2,//AirgabCrystalPMTxy/2.,     // y size
+                               AirgabCrystalPMTthick/2.); // z size
+
+
+  auto fAirgabCrystalPMTLV = new G4LogicalVolume(fAirgabCrystalPMTS,    //its solid
+                                        fWorldMaterial,    //its material
+                                        "AirgabCrystalPMT");       //its name
+
+  auto fAirgabCrystalPMTPV = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,-(PMTGlassthick+DetVacstepthick)/2),    //its position
+                                fAirgabCrystalPMTLV,            //its logical volume
+                                "AirgabCrystalPMT",                 //its name
+                                fPMTmountLV,               //its mother
+                                false,                     //no boolean operat
+                                0);                        //copy number
+  fAirgabCrystalPMTLV->SetVisAttributes(AirVis);
+
+  //
+  // PMTGlass Window
+  //
+
+  auto fPMTGlassS= new G4Box("PMTGlass",  //Name
+                                detx/2,//PMTGlassxy/2.,   // x size
+                                detx/2,//PMTGlassxy/2.,     // y size
+                               PMTGlassthick/2.); // z size
+
+
+  auto fPMTGlassLV = new G4LogicalVolume(fPMTGlassS,    //its solid
+                                        PMTGlass,    //its material
+                                        "PMTGlass");       //its name
+
+  auto fPMTGlassPV = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,(AirgabCrystalPMTthick-DetVacstepthick)/2),    //its position
+                                fPMTGlassLV,            //its logical volume
+                                "PMTGlass",                 //its name
+                                fPMTmountLV,               //its mother
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+  fPMTGlassLV->SetVisAttributes(GlassVis);
+
+  //
+  //vacuum step 3 this is the detector behind the PMTGLass // use 4 anodes
   auto fVacStepS3 = new G4Box("VacStep3",  //Name
-                               vac3x/2.,
-                               vac3y/2,
-                               vacthick/2.);
+                               detx/2,//DetVacstepxy/2.,
+                               detx/2,// DetVacstepxy/2,
+                               DetVacstepthick/2.);
 
   auto fVacStepLV3 = new G4LogicalVolume(fVacStepS3,    //its solid
-                                        fWorldMaterial,    //its material
+                                        Vacuum,    //its material
                                         "VacStep3");       //its name
 
+
   fVacStepPV3 = new G4PVPlacement(0,                   //no rotation
-                        G4ThreeVector(0.,0.,(aluwrapthick+alairgaplength)/2),    //its position //old 0.,0.,aluwraplength/2
+                        G4ThreeVector(0,0,(AirgabCrystalPMTthick+PMTGlassthick)/2),    //its position //old 0.,0.,aluwraplength/2
                                 fVacStepLV3,            //its logical volume
                                 "VacStep3",                 //its name
-                                fAluwrapLV,               //its mother //old fCaloCellLV
+                                fPMTmountLV,               //its mother
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
@@ -678,7 +881,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                calorcellxy/2,
                                vacthick/2.);
 
-  auto fVacStepLV4 = new G4LogicalVolume(fVacStepS3,    //its solid
+  auto fVacStepLV4 = new G4LogicalVolume(fVacStepS4,    //its solid
                                         fWorldMaterial,    //its material
                                         "VacStep4");       //its name
 
@@ -690,10 +893,129 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                 false,                     //no boolean operat
                                 0);                        //copy number
 
-  // fVacStepLV4->SetVisAttributes(VacStep3Vis);
-  fVacStepLV4->SetVisAttributes(G4VisAttributes::GetInvisible());
+   fVacStepLV4->SetVisAttributes(VacStep3Vis);
+  // fVacStepLV4->SetVisAttributes(G4VisAttributes::GetInvisible());
+
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  // Scintillator Fingers  (SF)
+  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+if(SFStatus=="true"){
+
+  //Vinylfoil for the Scintillator fingers
+  auto SFVinylS= new G4Box("SFVenylfoil",  //Name
+                                SFVinylx/2.,   // x size
+                                SFVinyly/2.,     // y size
+                                SFVinyllength/2.); // z size
 
 
+  auto SFVinylLV = new G4LogicalVolume(SFVinylS,    //its solid
+                                         Venyl,    //its material
+                                         "SFVinylfoil");       //its name
+
+  auto SFVinylPV = new G4PVPlacement(SFRotation,                   //no rotation
+                         G4ThreeVector(SFpositonx,SFpositony,SFpositonZ),    //its position // old 0.,0.,-vacthick/2
+                                 SFVinylLV,            //its logical volume
+                                 "SFVinylfoil",                 //its name
+                                LogicalWorld,               //its mother
+                                 false,                     //no boolean operat
+                                     0);                        //copy number
+
+  SFVinylLV->SetVisAttributes(VenyfoilVis);
+
+  // Alu-wrapping for SF
+  //
+  auto SFAluWrapS= new G4Box("SFAluWrapping",  //Name
+                                SFAlux/2.,   // x size
+                                SFAluy/2.,     // y size
+                                SFAlulength/2.); // z size
+
+
+  auto SFAluwrapLV = new G4LogicalVolume(SFAluWrapS,    //its solid
+                                         Al,    //its material
+                                         "SFAluWrapping");       //its name
+
+  auto SFAluwrapPV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(0.,0.,-(SFVacstepthick-SFVinylthick)/2),    // its positon
+                                 SFAluwrapLV,            //its logical volume
+                                 "SFAluWrapping",                 //its name
+                                 SFVinylLV,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                        //copy number
+
+  SFAluwrapLV->SetVisAttributes(AluVis);
+
+  //
+  // AirGap for SF Material and Aluwrapping
+  //
+  auto SFAirGapS= new G4Box("SFAirGap",  //Name
+                               SFairgapx/2.,   // x size
+                               SFairgapy/2.,     // y size
+                               SFairgaplength/2.); // z size
+
+
+  auto SFAirGapLV = new G4LogicalVolume(SFAirGapS,    //its solid
+                                        Air,    //its material
+                                        "SFAirGap");       //its name
+
+  auto SFAirGapPV = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,SFAluthick/2),    //its position
+                                SFAirGapLV,            //its logical volume
+                                "SFAirGap",                 //its name
+                                SFAluwrapLV,               //its mother
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+  //SFAirGapLV->SetVisAttributes(G4VisAttributes::GetInvisible());
+  SFAirGapLV->SetVisAttributes(AirVis);
+
+  //
+  // Scintillator
+  //
+  auto SFS= new G4Box("Scintillarofinger",  //Name
+                               SFx/2.,   // x size
+                               SFy/2.,     // y size
+                               SFlength/2.); // z size
+
+
+  auto SFLV = new G4LogicalVolume(SFS,    //its solid
+                                        SFMat,    //its material
+                                        "Scintillarofinger");       //its name
+
+  auto SFPV = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0.,0.,SFairgapthick/2),    //its position
+                                SFLV,            //its logical volume
+                                "Scintillarofinger",                 //its name
+                                SFAirGapLV,               //its mother
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+  SFLV->SetVisAttributes(CrystalVis);
+
+
+  //vacuum step 5 this is the detector for the Scintillaror fingers
+  auto fVacStepS5 = new G4Box("VacStep5",  //Name
+                               SFVacstepx/2,//DetVacstepxy/2.,
+                               SFVacstepy/2,// DetVacstepxy/2,
+                               SFVacstepthick/2.);
+
+  auto fVacStepLV5 = new G4LogicalVolume(fVacStepS5,    //its solid
+                                        Vacuum,    //its material
+                                        "VacStep5");       //its name
+
+
+  fVacStepPV5 = new G4PVPlacement(0,                   //no rotation
+                        G4ThreeVector(0,0,(SFAlulength+SFVinylthick)/2),    //its position //old 0.,0.,aluwraplength/2
+                                fVacStepLV5,            //its logical volume
+                                "VacStep5",                 //its name
+                                SFVinylLV,               //its mother
+                                false,                     //no boolean operat
+                                0);                        //copy number
+
+  fVacStepLV5->SetVisAttributes(VacStep3Vis);
+
+ }
+ else {  G4cout<<"There is no Scintillator-Finger in the beam"<<G4endl;}
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  // Beamline geometry
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -707,9 +1029,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4double  concreteHolehigth =  20.*cm;     //hight of the hole in the conrete concrete block
    G4double  concreteHolewidth =  9.5*cm;     //width of the hole in the conrete concrete block
 
+   G4double  collimatorwidth   =  10.*cm;
    G4double  collimatorlength  =  20.*cm;     //lenght of the colimator copper block
    G4double  collimatorradius  =  RCollimator;      //radius of the colimator hole
 
+
+   G4double distColltoCBlock= 2.*cm;         //distance from the Collimator to concrete block
    G4double distoCBlock= 18.*cm;            //distance from the aluwindow of the beam line ot to the conrete block
 
    G4double Aluwindowthick= 0.2*mm;         // thickness of the aluwindow
@@ -733,7 +1058,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "concreteBlock");  //its name
 
    auto fconcreteBlockPV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,-concreteBlocklength/2.),    //its position
+                         G4ThreeVector(0.,-415,-(collimatorlength+distColltoCBlock+concreteBlocklength/2.)),    //its position
                                  fconcreteBlockLV,            //its logical volume
                                  "concreteBlock",                 //its name
                                 LogicalWorld,               //its mother
@@ -756,7 +1081,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "concreteHole");  //its name
 
    auto fconcreteHolePV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,0.),    //its position
+                         G4ThreeVector(0.,415.,0.),    //its position
                                  fconcreteHoleLV,            //its logical volume
                                  "concreteHole",                 //its name
                                  fconcreteBlockLV,               //its mother
@@ -769,8 +1094,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    if (RCollimator>0){
    // copper collimator
    auto fcollimatorS= new G4Box("collimator",         // Name
-                                concreteHolewidth/2.,     // x size
-                                concreteHolehigth/2.,     // y size
+                                collimatorwidth/2.,     // x size
+                                collimatorwidth/2.,     // y size
                                 collimatorlength/2.);    // z size
 
 
@@ -779,10 +1104,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "collimator");  //its name
 
    auto fcollimatorPV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,(concreteBlocklength-collimatorlength)/2),    //its position
+                         G4ThreeVector(0.,0.,-collimatorlength/2),    //its position
                                  fcollimatorLV,            //its logical volume
                                  "collimator",                 //its name
-                                 fconcreteHoleLV,               //its mother
+                                 LogicalWorld,               //its mother
                                  false,                     //no boolean operat
                                  0);                        //copy number
 
@@ -810,6 +1135,48 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                  0);                        //copy number
 
    }
+
+
+   // Lead shelding 2 Blocks next to the Collimator
+   auto fBlei1S= new G4Box("Blei1",         // Name
+                              200/2.,     // x size
+                              250/2.,     // y size
+                              100/2.);    // z size
+
+
+   auto fBlei1LV = new G4LogicalVolume(fBlei1S,  //its solid
+                                         shieldMat,    //its material
+                                         "Blei1");  //its name
+
+   auto fBlei1PV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(-160,40,-165),    //its position
+                                 fBlei1LV,            //its logical volume
+                                 "Blei1",                 //its name
+                                LogicalWorld,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                 //copy number
+
+   auto fBlei2S= new G4Box("Blei2",         // Name
+                              200/2.,     // x size
+                              300/2.,     // y size
+                              100/2.);    // z size
+
+
+   auto fBlei2LV = new G4LogicalVolume(fBlei2S,  //its solid
+                                         shieldMat,    //its material
+                                         "Blei2");  //its name
+
+   auto fBlei2PV = new G4PVPlacement(0,                   //no rotation
+                         G4ThreeVector(160,65,-165),    //its position
+                                 fBlei2LV,            //its logical volume
+                                 "Blei2",                 //its name
+                                LogicalWorld,               //its mother
+                                 false,                     //no boolean operat
+                                 0);                 //copy number
+
+   fBlei2LV->SetVisAttributes(BleiVis);
+   fBlei1LV->SetVisAttributes(BleiVis);
+
    //
    // beam line tube
    auto fbeamlineTubeS= new G4Tubs("beamline", //name
@@ -824,7 +1191,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "beamline");  //its name
 
    auto fbeamlineTubePV = new G4PVPlacement(0,                   //no rotation
-                         G4ThreeVector(0.,0.,-(concreteBlocklength+distoCBlock+beamlinelength/2.)),    //its position
+                         G4ThreeVector(0.,0.,-(collimatorlength+distColltoCBlock+concreteBlocklength+distoCBlock+beamlinelength/2.)),    //its position
                                  fbeamlineTubeLV,            //its logical volume
                                  "beamline",                 //its name
                                  LogicalWorld,               //its mother
@@ -920,46 +1287,46 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   //
+
+  // here we take the defould model dielectric_dielectric with a perfect smooth surface so we do not have to define a border surface!
   /// - Quartz <-> Air: Unified model (taken from QuaSi) /have to check if TF1 <-> Air is different
-
   // properties table
-  G4MaterialPropertiesTable* AirQSurfProp = new G4MaterialPropertiesTable();
-  const G4int n_AirQ=2;
-  G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
-  G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
-  G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
-
-  G4double PE_OpAir[n_AirQ] = {1.38*eV, 6.70*eV};
-  G4double RI_OpAir[n_AirQ] = {1.00029, 1.00029};
-  AirQSurfProp -> AddProperty("RINDEX", PE_OpAir, RI_OpAir, n_AirQ);
-  AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
-  AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
-  AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
-
-  // optical and logical surface
-  G4OpticalSurface* OpAirSurface = new G4OpticalSurface("QAirSurface");
-  OpAirSurface -> SetType(dielectric_dielectric);
-  OpAirSurface -> SetModel(unified);
-
-  // from Janacek, Morses, Simulating Scintillator Light ..., IEEE 2010:
-  // polished 1.3 degree, etched 3.8 degree, ground 12 degree
-  //          0.023              0.066              0.21
-  // degree   1      2      3      4      5      6      7      8      9      10     11     12
-  // radians  0.017  0.035  0.052  0.070  0.087  0.105  0.122  0.140  0.157  0.175  0.192  0.209
-  // degree   13     14     15
-  // radians  0.227  0.244  0.262
-
-  OpAirSurface -> SetFinish(ground);
-  //  G4double sigma_alpha = 0.023;
-  //  G4double sigma_alpha = 0.066;
-  G4double sigma_alpha = 0.209;
-  OpAirSurface -> SetSigmaAlpha(sigma_alpha);
-  OpAirSurface -> SetMaterialPropertiesTable(AirQSurfProp);
-  G4LogicalBorderSurface* AirSurface =
-  	new G4LogicalBorderSurface("QAirSurface", fDetectorPV, fAlAirGapPV, OpAirSurface);
-  G4LogicalBorderSurface* AirSurface2 =
-  	new G4LogicalBorderSurface("QAirSurface", fAlAirGapPV, fDetectorPV, OpAirSurface);
-
+  // G4MaterialPropertiesTable* AirQSurfProp = new G4MaterialPropertiesTable();
+  // const G4int n_AirQ=2;
+  // G4double OpAirSpecularlobe[n_AirQ] = {1.0, 1.0};
+  // G4double OpAirSpecularspike[n_AirQ] = {0.0, 0.0};
+  // G4double OpAirBackscatter[n_AirQ] = {0.0, 0.0};
+  //
+  // G4double PE_OpAir[n_AirQ] = {1.38*eV, 6.70*eV};
+  // G4double RI_OpAir[n_AirQ] = {1.00029, 1.00029};
+  // AirQSurfProp -> AddProperty("RINDEX", PE_OpAir, RI_OpAir, n_AirQ);
+  // AirQSurfProp -> AddProperty("SPECULARLOBECONSTANT", PE_OpAir, OpAirSpecularlobe, n_AirQ);
+  // AirQSurfProp -> AddProperty("SPECULARSPIKECONSTANT", PE_OpAir, OpAirSpecularspike, n_AirQ);
+  // AirQSurfProp -> AddProperty("BACKSCATTERCONSTANT", PE_OpAir, OpAirBackscatter, n_AirQ);
+  //
+  // // optical and logical surface
+  // G4OpticalSurface* OpAirSurface = new G4OpticalSurface("QAirSurface");
+  // OpAirSurface -> SetType(dielectric_dielectric);
+  // OpAirSurface -> SetModel(unified);
+  //
+  // // from Janacek, Morses, Simulating Scintillator Light ..., IEEE 2010:
+  // // polished 1.3 degree, etched 3.8 degree, ground 12 degree
+  // //          0.023              0.066              0.21
+  // // degree   1      2      3      4      5      6      7      8      9      10     11     12
+  // // radians  0.017  0.035  0.052  0.070  0.087  0.105  0.122  0.140  0.157  0.175  0.192  0.209
+  // // degree   13     14     15
+  // // radians  0.227  0.244  0.262
+  //
+  // OpAirSurface -> SetFinish(ground);
+  // //  G4double sigma_alpha = 0.023;
+  // //  G4double sigma_alpha = 0.066;
+  // G4double sigma_alpha = 0.209;
+  // OpAirSurface -> SetSigmaAlpha(sigma_alpha);
+  // OpAirSurface -> SetMaterialPropertiesTable(AirQSurfProp);
+  // G4LogicalBorderSurface* AirSurface =
+  // 	new G4LogicalBorderSurface("QAirSurface", fDetectorPV, fAlAirGapPV, OpAirSurface);
+  // G4LogicalBorderSurface* AirSurface2 =
+  // 	new G4LogicalBorderSurface("QAirSurface", fAlAirGapPV, fDetectorPV, OpAirSurface);
 
   } //end if-statement for the calorimeter geometry
 
@@ -1085,6 +1452,17 @@ void DetectorConstruction::SetCaloDistance(G4double value)
   UpdateGeometry();
 }
 
+void DetectorConstruction::SetSFStatus(G4String value)
+{
+  SFStatus = value;
+  UpdateGeometry();
+}
+
+void DetectorConstruction::SetCaloXposition(G4double value)
+{
+  CaloXpos = value;
+  UpdateGeometry();
+}
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #include "G4RunManager.hh"

@@ -117,13 +117,52 @@ void RunAction::BookHisto()
      fAnalysisManager->FinishNtuple();}
 
     else if(versionType=="Cal"){
-     fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
-     fAnalysisManager->CreateNtupleDColumn("Ecalo");
-     fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
-     fAnalysisManager->CreateNtupleDColumn("EIn");
+     // fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
+     // fAnalysisManager->CreateNtupleDColumn("Ecalo");
+     // fAnalysisManager->CreateNtupleDColumn("EPhotonSum");
+     // fAnalysisManager->CreateNtupleDColumn("EIn");
+     // fAnalysisManager->FinishNtuple();
+     // fAnalysisManager->CreateNtuple("calorimeter", "Crystals");
+     // fAnalysisManager->CreateNtuple("calorimeter", "crystal_vacstep3");
+
+     // Here I make an spesific output for the geometry with 2 crystals like in the LPA-Testbeam
+     // could be optimized with kind of a if statement to adjust for more or fewer crystals...
+
+     // Here the information of the incomming particles are saved
+     fAnalysisManager->CreateNtuple("calorimeter", "2Crystals");
+     fAnalysisManager->CreateNtupleDColumn("Ecalo0"); // deposited Energy in the Crystal0
+     fAnalysisManager->CreateNtupleDColumn("Eelectron0");// Energysumm of the incomming e-
+     fAnalysisManager->CreateNtupleDColumn("Nelectron0");// # incoming electrons
+     fAnalysisManager->CreateNtupleDColumn("Egamma0");// Energysumm of the incomming gammas
+     fAnalysisManager->CreateNtupleDColumn("Ngamma0");// # of incoming Gammas
+     fAnalysisManager->CreateNtupleDColumn("Erest0");// Energysumm of all other particles
+     fAnalysisManager->CreateNtupleDColumn("Nrest0");// # of incoming Rest
+
+     fAnalysisManager->CreateNtupleDColumn("Ecalo1"); // deposited Energy in the Crystal0
+     fAnalysisManager->CreateNtupleDColumn("Eelectron1");// Energysumm of the incomming e-
+     fAnalysisManager->CreateNtupleDColumn("Nelectron1");// # of incoming electrons
+     fAnalysisManager->CreateNtupleDColumn("Egamma1");// Energysumm of the incomming gammas
+     fAnalysisManager->CreateNtupleDColumn("Ngamma1");// # of incoming gamma
+     fAnalysisManager->CreateNtupleDColumn("Erest1");// Energysumm of all other particles
+     fAnalysisManager->CreateNtupleDColumn("Nrest1");// # of incoming rest
      fAnalysisManager->FinishNtuple();
-     // histrogramm id=0
-     fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);}
+
+     // Histos for the photon spectrum at the back of the crystal
+     //
+     // Crystal 0 (the one with the square PMT)
+     fAnalysisManager->CreateH1("SPMTanode1","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=0
+     fAnalysisManager->CreateH1("SPMTanode2","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=1
+     fAnalysisManager->CreateH1("SPMTanode3","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=2
+     fAnalysisManager->CreateH1("SPMTanode4","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=3
+
+     //Crystal 1 ( the one with the round PMT)
+
+     fAnalysisManager->CreateH1("RPMTanode","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=4
+
+
+     // // histrogramm id=0
+     // fAnalysisManager->CreateH1("EPhotons","Cherekov Spectrum", 100, 1.3, 3.3);
+    }
 
     else if(versionType=="PolCal"){
      //id=0
@@ -196,24 +235,33 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeter", "vacstep3");
      fAnalysisManager->CreateNtupleIColumn("pdg");
      fAnalysisManager->CreateNtupleDColumn("E");
-     fAnalysisManager->CreateNtupleDColumn("CopyNumber");
-     // fAnalysisManager->CreateNtupleDColumn("x");
-     // fAnalysisManager->CreateNtupleDColumn("y");
-     // fAnalysisManager->CreateNtupleDColumn("z");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumberCrystal");
+     fAnalysisManager->CreateNtupleDColumn("x");
+     fAnalysisManager->CreateNtupleDColumn("y");
+     fAnalysisManager->CreateNtupleDColumn("z");
      fAnalysisManager->FinishNtuple();
 
      //id=1
      fAnalysisManager->CreateNtuple("calorimeterIn", "vacstep4");
      fAnalysisManager->CreateNtupleIColumn("pdg");
      fAnalysisManager->CreateNtupleDColumn("E");
-     //fAnalysisManager->CreateNtupleDColumn("CopyNumber");
+     fAnalysisManager->CreateNtupleDColumn("CopyNumberCrystal");
      fAnalysisManager->CreateNtupleDColumn("Vx");//it is the vertex position of the detected particle
      fAnalysisManager->CreateNtupleDColumn("Vy");//it is the vertex position of the detected particle
      fAnalysisManager->CreateNtupleDColumn("Vz");//it is the vertex position of the detected particle
      fAnalysisManager->CreateNtupleDColumn("x");
      fAnalysisManager->CreateNtupleDColumn("y");
      fAnalysisManager->CreateNtupleDColumn("z");
-     fAnalysisManager->FinishNtuple();}
+     fAnalysisManager->FinishNtuple();
+
+      if(fDetector->GetSFStatus()=="true") {
+         //id=2
+         fAnalysisManager->CreateNtuple("ScintillatorFinger", "vacstep5");
+         fAnalysisManager->CreateNtupleIColumn("pdg");
+         fAnalysisManager->CreateNtupleDColumn("E");
+        fAnalysisManager->FinishNtuple();
+      }
+     }
 
 
     else if(versionType=="PolCal"){
