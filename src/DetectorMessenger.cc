@@ -112,6 +112,15 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fSFCmd->SetParameterName("choice",false);
   fSFCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fLanexCmd = new G4UIcmdWithAString("/leap/det/WithLanexScreen",this);
+  fLanexCmd->SetGuidance("Select if you want the Lanex screen or not");
+  fLanexCmd->SetParameterName("choice",false);
+  fLanexCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fStrawCmd = new G4UIcmdWithAString("/leap/det/WithStrawDetector",this);
+  fStrawCmd->SetGuidance("Select if you want the LUXE Straw detector or not");
+  fStrawCmd->SetParameterName("choice",false);
+  fStrawCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fCaloXposCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetCaloXpos",this);
   fCaloXposCmd->SetGuidance("X position of the Calorimeter");
@@ -136,6 +145,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fCollimatorCmd;
   delete fdCaloCmd;
   delete fSFCmd;
+  delete fLanexCmd;
+  delete fStrawCmd;
   delete fCaloXposCmd;
 
 }
@@ -173,6 +184,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
  if( command == fSFCmd )
    { fDetector->SetSFStatus(newValue);}
+
+ if( command == fLanexCmd )
+   { fDetector->SetLanexStatus(newValue);}
+
+ if( command == fStrawCmd )
+   { fDetector->SetStrawStatus(newValue);}
 
  if( command == fCaloXposCmd )
    { fDetector->SetCaloXposition(fCaloXposCmd->GetNewDoubleValue(newValue));}

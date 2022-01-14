@@ -1458,6 +1458,18 @@ void DetectorConstruction::SetSFStatus(G4String value)
   UpdateGeometry();
 }
 
+void DetectorConstruction::SetLanexStatus(G4String value)
+{
+  LanexStatus = value;
+  UpdateGeometry();
+}
+
+void DetectorConstruction::SetStrawStatus(G4String value)
+{
+  StrawStatus = value;
+  UpdateGeometry();
+}
+
 void DetectorConstruction::SetCaloXposition(G4double value)
 {
   CaloXpos = value;
