@@ -75,6 +75,13 @@ void EventAction::BeginOfEventAction(const G4Event*)
       Egamma1=0.;
       Erest1=0.;
 
+      Nelectron0=0.;
+      Nelectron1=0.;
+      Ngamma0=0.;
+      Ngamma1=0.;
+      Nrest0=0.;
+      Nrest1=0.;
+
      }
      else if(versionType=="PolCal"){
       fEnergySum = 0.; // Sum of energy of particles behind magnet
@@ -112,13 +119,19 @@ void EventAction::EndOfEventAction(const G4Event*)
 
      analysisManager->FillNtupleDColumn(0,0,Ecalo0);
      analysisManager->FillNtupleDColumn(0,1,Eelectron0);
-     analysisManager->FillNtupleDColumn(0,2,Egamma0);
-     analysisManager->FillNtupleDColumn(0,3,Erest0);
+     analysisManager->FillNtupleDColumn(0,2,Nelectron0);
+     analysisManager->FillNtupleDColumn(0,3,Egamma0);
+     analysisManager->FillNtupleDColumn(0,4,Ngamma0);
+     analysisManager->FillNtupleDColumn(0,5,Erest0);
+     analysisManager->FillNtupleDColumn(0,6,Nrest0);
 
-     analysisManager->FillNtupleDColumn(0,4,Ecalo1);
-     analysisManager->FillNtupleDColumn(0,5,Eelectron1);
-     analysisManager->FillNtupleDColumn(0,6,Egamma1);
-     analysisManager->FillNtupleDColumn(0,7,Erest1);
+     analysisManager->FillNtupleDColumn(0,7,Ecalo1);
+     analysisManager->FillNtupleDColumn(0,8,Eelectron1);
+     analysisManager->FillNtupleDColumn(0,9,Nelectron1);
+     analysisManager->FillNtupleDColumn(0,10,Egamma1);
+     analysisManager->FillNtupleDColumn(0,11,Ngamma1);
+     analysisManager->FillNtupleDColumn(0,12,Erest1);
+     analysisManager->FillNtupleDColumn(0,13,Nrest1);
      analysisManager->AddNtupleRow(0);
 
     }

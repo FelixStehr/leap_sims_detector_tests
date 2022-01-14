@@ -70,6 +70,7 @@ class DetectorMessenger: public G4UImessenger
     G4UIcmdWithADoubleAndUnit*   fCollimatorCmd;
     G4UIcmdWithADoubleAndUnit*   fdCaloCmd;
     G4UIcmdWithAString* fSFCmd;
+    G4UIcmdWithADoubleAndUnit*   fCaloXposCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

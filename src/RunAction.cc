@@ -132,13 +132,19 @@ void RunAction::BookHisto()
      fAnalysisManager->CreateNtuple("calorimeter", "2Crystals");
      fAnalysisManager->CreateNtupleDColumn("Ecalo0"); // deposited Energy in the Crystal0
      fAnalysisManager->CreateNtupleDColumn("Eelectron0");// Energysumm of the incomming e-
+     fAnalysisManager->CreateNtupleDColumn("Nelectron0");// # incoming electrons
      fAnalysisManager->CreateNtupleDColumn("Egamma0");// Energysumm of the incomming gammas
+     fAnalysisManager->CreateNtupleDColumn("Ngamma0");// # of incoming Gammas
      fAnalysisManager->CreateNtupleDColumn("Erest0");// Energysumm of all other particles
+     fAnalysisManager->CreateNtupleDColumn("Nrest0");// # of incoming Rest
 
      fAnalysisManager->CreateNtupleDColumn("Ecalo1"); // deposited Energy in the Crystal0
      fAnalysisManager->CreateNtupleDColumn("Eelectron1");// Energysumm of the incomming e-
+     fAnalysisManager->CreateNtupleDColumn("Nelectron1");// # of incoming electrons
      fAnalysisManager->CreateNtupleDColumn("Egamma1");// Energysumm of the incomming gammas
+     fAnalysisManager->CreateNtupleDColumn("Ngamma1");// # of incoming gamma
      fAnalysisManager->CreateNtupleDColumn("Erest1");// Energysumm of all other particles
+     fAnalysisManager->CreateNtupleDColumn("Nrest1");// # of incoming rest
      fAnalysisManager->FinishNtuple();
 
      // Histos for the photon spectrum at the back of the crystal

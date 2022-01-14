@@ -67,7 +67,12 @@ public:
   void AddEgamma1(G4double Eg1);
   void AddErest1(G4double Er1);
 
-
+  // void AddNelectron0(G4double Ne0);
+  // void AddNelectron1(G4double Ne1);
+  // void AddNgamma0(G4double Ng0);
+  // void AddNgamma1(G4double Ng1);
+  // void AddNrest0(G4double Nr0);
+  // void AddNrest1(G4double Nr1);
 
 
 
@@ -94,6 +99,16 @@ private:
   G4double Eelectron1;
   G4double Egamma1;
   G4double Erest1;
+
+
+  G4double Nelectron0;
+  G4double Ngamma0;
+  G4double Nrest0;
+
+  G4double Nelectron1;
+  G4double Ngamma1;
+  G4double Nrest1;
+
 
 
 
@@ -132,14 +147,17 @@ inline void EventAction::AddEcalo0(G4double Ec0) { //Gamma Energy on the entrace
 
 inline void EventAction::AddEelectron0(G4double Ee0) { //Gamma Energy on the entrace of the crystals
   Eelectron0+= Ee0;
+  Nelectron0+= 1.;
 }
 
 inline void EventAction::AddEgamma0(G4double Eg0) { //Gamma Energy on the entrace of the crystals
   Egamma0+= Eg0;
+  Ngamma0+= 1.;
 }
 
 inline void EventAction::AddErest0(G4double Er0) { //Gamma Energy on the entrace of the crystals
   Erest0+= Er0;
+  Nrest0+= 1.;
 }
 
 
@@ -150,14 +168,17 @@ inline void EventAction::AddEcalo1(G4double Ec1) { //Gamma Energy on the entrace
 
 inline void EventAction::AddEelectron1(G4double Ee1) { //Gamma Energy on the entrace of the crystals
   Eelectron1+= Ee1;
+  Nelectron1+= 1.;
 }
 
 inline void EventAction::AddEgamma1(G4double Eg1) { //Gamma Energy on the entrace of the crystals
   Egamma1+= Eg1;
+  Ngamma1+=1.;
 }
 
 inline void EventAction::AddErest1(G4double Er1) { //Gamma Energy on the entrace of the crystals
   Erest1+= Er1;
+  Nrest1+= 1.;
 }
 
 

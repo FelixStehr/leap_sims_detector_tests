@@ -80,6 +80,7 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   SFStatus ="true";
   dCalo = 10*cm;
   RCollimator = 2.5*mm;
+  CaloXpos = 0.*mm;
 
   SetConvMaterial("G4_W");
   // if(beamlineStatus=="on"){
@@ -169,7 +170,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //defining the size of the Calorimeterzell and the virtual calorimeter (mother volume of the calorimetercells)
   //G4int NbofCalor = 9; //here later free paramter to select numer of crystals
   //G4double calorcellxy = aluwrapx;
-  G4double calorcellxy = venylfoilxy;
+
+  G4double calorcellxy;
+  if (venylfoilxy<= 4*cm){
+    calorcellxy= 4*cm;}// here I took 4cm becouse in the experiment wie assumed that the crystal centres are 4cm apart
+  else{ calorcellxy=venylfoilxy;}
   G4double calorcelllength = venylfoillength + vacthick;
   G4double virtcalorxy;
 
@@ -601,7 +606,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "virtualCalorimeter");       //its name
 
   fVirtCaloPV = new G4PVPlacement(0,                   //no rotation: 0 or rotation 90 deg around x axis : myRotaion
-                         G4ThreeVector(calorcellxy/2,0.,caloZposition),    //its position
+                         G4ThreeVector(calorcellxy/2+CaloXpos,0.,caloZposition),    //if CaloXpos =0 the crystal with the square PMT is in the centre of the beam
                                  fVirtCaloLV,            //its logical volume
                                  "virtualCalorimeter",                 //its name
                                 LogicalWorld,               //its mother
@@ -1450,6 +1455,12 @@ void DetectorConstruction::SetCaloDistance(G4double value)
 void DetectorConstruction::SetSFStatus(G4String value)
 {
   SFStatus = value;
+  UpdateGeometry();
+}
+
+void DetectorConstruction::SetCaloXposition(G4double value)
+{
+  CaloXpos = value;
   UpdateGeometry();
 }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -112,6 +112,13 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
   fSFCmd->SetParameterName("choice",false);
   fSFCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+
+  fCaloXposCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetCaloXpos",this);
+  fCaloXposCmd->SetGuidance("X position of the Calorimeter");
+  fCaloXposCmd->SetParameterName("CaloXpos",false);
+  fCaloXposCmd->SetUnitCategory("Length");
+  fCaloXposCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -129,6 +136,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fCollimatorCmd;
   delete fdCaloCmd;
   delete fSFCmd;
+  delete fCaloXposCmd;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -164,6 +173,9 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
  if( command == fSFCmd )
    { fDetector->SetSFStatus(newValue);}
+
+ if( command == fCaloXposCmd )
+   { fDetector->SetCaloXposition(fCaloXposCmd->GetNewDoubleValue(newValue));}
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

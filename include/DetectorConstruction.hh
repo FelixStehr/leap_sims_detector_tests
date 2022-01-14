@@ -65,6 +65,7 @@ public:
   void SetCollimatorRadius (G4double);
   void SetCaloDistance (G4double);
   void SetSFStatus (G4String);
+  void SetCaloXposition (G4double);
   void UpdateGeometry ();
 
 public:
@@ -123,6 +124,8 @@ private:
   G4double dCalo;
   G4double RCollimator;
   G4String SFStatus;
+  G4double CaloXpos;
+
 
 };
 

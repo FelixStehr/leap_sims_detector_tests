@@ -130,25 +130,47 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
          if(theTouchable->GetReplicaNumber(4)==0){fEventAction->AddEcalo0(edep);}   // ReplicaNumber4 should be the one from the Crystal
          else if(theTouchable->GetReplicaNumber(4)==1){fEventAction->AddEcalo1(edep);}
          }
+      //
+      // // Get the incomming e- energy for crystal 0 and 1
+      // else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
+      //    auto Ee = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+      //    if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEelectron0(Ee);} // ReplicaNumber1 should be the one from the Vacstep4
+      //    else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEelectron1(Ee);}
+      //    }
+      // // Get the incomming gamma energy for crystal 0 and 1
+      // else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
+      //    auto Eg = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+      //    if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEgamma0(Eg);}
+      //    else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEgamma1(Eg);}
+      //    }
+      // // Get the incomming energy of all other particles for crystal 0 and 1
+      // else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == -11 ) {
+      //    auto Er = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+      //    if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddErest0(Er);}
+      //    else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddErest1(Er);}
+      //    }
 
-      // Get the incomming e- energy for crystal 0 and 1
-      else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
+
+      // Get the incomming e- energy for crystal 0 and 1 from all sides
+      else if (postvolume == CrystalPV && prevolume !=CrystalPV & aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
          auto Ee = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEelectron0(Ee);} // ReplicaNumber1 should be the one from the Vacstep4
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEelectron1(Ee);}
          }
       // Get the incomming gamma energy for crystal 0 and 1
-      else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
+      else if (postvolume == CrystalPV && prevolume !=CrystalPV & aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
          auto Eg = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEgamma0(Eg);}
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEgamma1(Eg);}
          }
       // Get the incomming energy of all other particles for crystal 0 and 1
-      else if (postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == -11 ) {
+      else if (postvolume == CrystalPV && prevolume !=CrystalPV & aTrack->GetParticleDefinition()->GetPDGEncoding() ==  -11 ) {
          auto Er = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddErest0(Er);}
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddErest1(Er);}
          }
+
+
 
       // Now I will fill the Histogramms
 
@@ -306,6 +328,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       auto VacStep4PV=fDetector->GetVacStep4PV();
       // auto AluwrapPV =fDetector->GetAluwrapPV();
       auto VinylPV =fDetector->GetVinylPV();
+      auto CrystalPV=fDetector->GetDetectorPV();
 
       // if ( postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()) {
       if ( postvolume == VacStep3PV && prevolume !=VacStep3PV) {
@@ -325,7 +348,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           aTrack->SetTrackStatus(fStopAndKill); } // here all particles which are detected get killed
 
      // if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != AluwrapPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
-      if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding()!=0) {
+      if( postvolume == CrystalPV && prevolume != CrystalPV  && aTrack->GetParticleDefinition()->GetPDGEncoding()!=0) {
+      // if( postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume != VinylPV && aTrack->GetParticleDefinition()->GetPDGEncoding()!=0) {
           // fill ntuple id=0
           fAnalysisManager->FillNtupleIColumn(1,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
 
