@@ -78,6 +78,8 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   fWorldSize = 8*m;
   CrystalNumber= "one";
   SFStatus ="true";
+  LanexStatus ="true";
+  StrawStatus ="true";
   dCalo = 10*cm;
   RCollimator = 2.5*mm;
   CaloXpos = 0.*mm;
@@ -233,16 +235,34 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double SFpositonx = -(SFVinyllength/2.-Intersectiondis)/sqrt(2);
   G4double SFpositony = SFpositonx;
 
-
-  // Rotation Matrix for the Scintilator
   G4RotationMatrix* SFRotation = new G4RotationMatrix();
-
   SFRotation->rotateY(90.*deg);
   SFRotation->rotateX(-45.*deg);
   // SFRotation->rotateZ(45.*deg);
 
+  //
+  // Lanex screen (from Jon)
+  //
+  G4double scz1 = 0.25 * mm;
+  G4double scz2 = 0.14 * mm;
+  G4double scz3 = 0.006 * mm;
+  G4double scx = 10 * cm;
+  G4double scy = 10 * cm;
+  G4double ZposLanex = dCalo - 5*mm - (scz1+scz2+scz3)/2;
+  //
+  // Cherencov Straw from Luxe
+  //
+  G4double ZposStraw = 28* cm;
+  G4double LStraw = 200* mm;
+  G4double dMylar = 36E-6*m;
+  G4double dCuAu = 50E-9*m;
+  G4double rStraw = 12/2 *mm;
+  G4double rMylar = 10/2 *mm;
+  G4double rCuAu = rMylar - dMylar;
+  G4double rOil = rCuAu - dCuAu;
 
-
+  G4RotationMatrix* StrawRotation = new G4RotationMatrix();
+  StrawRotation->rotateX(90.*deg);
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Get materials
@@ -261,6 +281,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* Venyl = allMaterials->GetMat("G4_POLYVINYL_CHLORIDE");
   G4Material* PMTGlass = allMaterials->GetMat("Glass");
   G4Material* SFMat = allMaterials->GetMat("G4_PLASTIC_SC_VINYLTOLUENE"); // not sure if it is the right material
+  G4Material* lanex = allMaterials->GetMat("G4_GADOLINIUM_OXYSULFIDE");
+  G4Material* Pstyrene = allMaterials->GetMat("Polystyrene");
+  G4Material* CuAu = allMaterials->GetMat("GoldAlloy");
+  G4Material* Mylar = allMaterials->GetMat("G4_MYLAR");
+  G4Material* StrawMat = allMaterials->GetMat("PLA");
+  G4Material* Parafin = allMaterials->GetMat("G4_PARAFFIN");
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //VisAttributes
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -379,6 +405,28 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     BleiVis->SetVisibility(true);
     BleiVis->SetLineWidth(1);
   //  BleiVis->SetForceSolid(true);
+
+
+  //
+  // Luxe cherencov straw and Lanex scintillator screen
+  //
+
+    G4VisAttributes * LanexVis= new G4VisAttributes( G4Colour(0/255. ,255/255. ,0/255.));
+    LanexVis->SetVisibility(true);
+    LanexVis->SetLineWidth(1);
+
+    G4VisAttributes * PolyVis1= new G4VisAttributes( G4Colour(173/255. ,216/255. ,230/255.));
+    PolyVis1->SetVisibility(true);
+    PolyVis1->SetLineWidth(1);
+
+    G4VisAttributes * PolyVis2= new G4VisAttributes( G4Colour(135/255. ,206/255. ,235/255.));
+    PolyVis2->SetVisibility(true);
+    PolyVis2->SetLineWidth(1);
+
+    G4VisAttributes * StrawVis= new G4VisAttributes( G4Colour(0/255. ,0/255. ,0/255.));
+    StrawVis->SetVisibility(true);
+    StrawVis->SetLineWidth(1);
+
 
 
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1016,6 +1064,77 @@ if(SFStatus=="true"){
 
  }
  else {  G4cout<<"There is no Scintillator-Finger in the beam"<<G4endl;}
+
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ //Lanex scintillator screen
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ if(LanexStatus == "true"){
+
+  auto scintArmSolid = new G4Box("scintArmSolid", scx/2., scy/2., (scz1+scz2+scz3)/2.);
+  auto scintArmLogical = new G4LogicalVolume(scintArmSolid,Air ,"scintArmLogical");
+
+  auto scintBaseSolid = new G4Box("scintBaseBox", scx/2., scy/2., scz1/2.);
+  auto scintBaseLogical = new G4LogicalVolume(scintBaseSolid, Pstyrene,"scintBaseLogical");
+
+  auto scintPhosphorSolid = new G4Box("scintPhosphorBox", scx/2., scy/2., scz2/2.);
+  auto scintPhosphorLogical = new G4LogicalVolume(scintPhosphorSolid, lanex,"scintPhosphorLogical");
+
+  auto scintFinishSolid = new G4Box("scintFinishBox", scx/2., scy/2., scz3/2.);
+  auto scintFinishLogical = new G4LogicalVolume(scintFinishSolid, Pstyrene,"scintFinishLogical");
+
+
+  new G4PVPlacement(0,G4ThreeVector(0.,0.,-(scz2+scz3)/2.),
+                    scintBaseLogical,"scintBasePhysical",scintArmLogical,false,0,1);
+
+  new G4PVPlacement(0,G4ThreeVector(0.,0.,(scz1 - scz3)/2.),
+                    scintPhosphorLogical,"scintPhosphorPhysical",scintArmLogical,false,0,1);
+
+  new G4PVPlacement(0,G4ThreeVector(0.,0.,(scz1+scz2)/2.),
+                    scintFinishLogical,"scintFinishPhysical",scintArmLogical,false,0,1);
+
+  new G4PVPlacement(0,G4ThreeVector(0,0,ZposLanex),
+                    scintArmLogical,"scintArmPhysical",LogicalWorld,false,0,1);
+
+  scintPhosphorLogical->SetVisAttributes(LanexVis);
+  scintFinishLogical->SetVisAttributes(PolyVis1);
+  scintBaseLogical->SetVisAttributes(PolyVis2);
+
+ }
+
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ //Cherencov Straw for LUXE
+ //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ if(StrawStatus == "true"){
+
+  auto StrawS= new G4Tubs("Straw", 0.,rStraw,LStraw/2., 0.0*deg, 360.0*deg );
+  auto StrawLV = new G4LogicalVolume(StrawS,StrawMat,"StawLogical");
+
+  auto MylarS= new G4Tubs("Mylar", 0.,rMylar,LStraw/2., 0.0*deg, 360.0*deg );
+  auto MylarLV = new G4LogicalVolume(MylarS,Mylar,"MylarLogical");
+
+  auto CuAuS= new G4Tubs("CuAu", 0.,rCuAu,LStraw/2., 0.0*deg, 360.0*deg );
+  auto CuAuLV = new G4LogicalVolume(CuAuS,CuAu,"CuAuLogical");
+
+  auto OilS= new G4Tubs("Oil", 0.,rOil,LStraw/2., 0.0*deg, 360.0*deg );
+  auto OilLV = new G4LogicalVolume(OilS,Air,"OilLogical");
+
+
+  new G4PVPlacement(StrawRotation, G4ThreeVector(0,0,ZposStraw),
+                    StrawLV,"StrawPhysical", LogicalWorld, false, 0);
+
+  new G4PVPlacement(0, G4ThreeVector(0,0,0),
+                    MylarLV,"MylarPhysical", StrawLV, false, 0);
+
+  new G4PVPlacement(0, G4ThreeVector(0,0,0),
+                    CuAuLV,"CuAuPhysical", MylarLV, false, 0);
+
+  new G4PVPlacement(0, G4ThreeVector(0,0,0),
+                    OilLV,"OilPhysical", CuAuLV, false, 0);
+
+  StrawLV->SetVisAttributes(StrawVis);
+ }
+
+
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  // Beamline geometry
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

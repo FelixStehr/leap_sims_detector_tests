@@ -151,7 +151,7 @@ void Materials::DefineMaterials()
   PLA->AddElement (O, 2);
 
   //PET for the Mylar foil
-  PET = new G4Material ("PLA", density=1.38*g/cm3, ncomponents=3); // plastic for the LUXE Straw foil
+  PET = new G4Material ("PET", density=1.38*g/cm3, ncomponents=3); // plastic for the LUXE Straw foil
   PET->AddElement (C, 10);
   PET->AddElement (H, 8);
   PET->AddElement (O, 4);
