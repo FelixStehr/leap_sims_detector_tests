@@ -77,9 +77,9 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   fConvThick = 1.75*mm;
   fWorldSize = 8*m;
   CrystalNumber= "one";
-  SFStatus ="true";
-  LanexStatus ="true";
-  StrawStatus ="true";
+  SFStatus ="false";
+  LanexStatus ="false";
+  StrawStatus ="false";
   dCalo = 10*cm;
   RCollimator = 2.5*mm;
   CaloXpos = 0.*mm;
@@ -1100,7 +1100,7 @@ if(SFStatus=="true"){
   scintBaseLogical->SetVisAttributes(PolyVis2);
 
  }
-
+ else {  G4cout<<"There is no Lanex screen in the beam"<<G4endl;}
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  //Cherencov Straw for LUXE
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1133,7 +1133,7 @@ if(SFStatus=="true"){
 
   StrawLV->SetVisAttributes(StrawVis);
  }
-
+ else {  G4cout<<"There is no cherenkov straw in the beam"<<G4endl;}
 
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  // Beamline geometry
@@ -1600,8 +1600,8 @@ void DetectorConstruction::SetCaloXposition(G4double value)
 
 void DetectorConstruction::UpdateGeometry()
 {
-  if (PhysicalWorld)
-    G4RunManager::GetRunManager()->DefineWorldVolume(Construct());
+  if (PhysicalWorld){
+    G4RunManager::GetRunManager()->DefineWorldVolume(Construct());}
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
