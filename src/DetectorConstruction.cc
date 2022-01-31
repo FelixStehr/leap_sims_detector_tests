@@ -1084,21 +1084,21 @@ if(SFStatus=="true"){
 
 
   new G4PVPlacement(0,G4ThreeVector(0.,0.,-(scz2+scz3)/2.),
-                    scintBaseLogical,"scintBasePhysical",scintArmLogical,false,0,1);
+                    scintBaseLogical,"scintBasePhysical",scintArmLogical,false,0);
 
   new G4PVPlacement(0,G4ThreeVector(0.,0.,(scz1 - scz3)/2.),
-                    scintPhosphorLogical,"scintPhosphorPhysical",scintArmLogical,false,0,1);
+                    scintPhosphorLogical,"scintPhosphorPhysical",scintArmLogical,false,0);
 
   new G4PVPlacement(0,G4ThreeVector(0.,0.,(scz1+scz2)/2.),
-                    scintFinishLogical,"scintFinishPhysical",scintArmLogical,false,0,1);
+                    scintFinishLogical,"scintFinishPhysical",scintArmLogical,false,0);
 
   new G4PVPlacement(0,G4ThreeVector(0,0,ZposLanex),
-                    scintArmLogical,"scintArmPhysical",LogicalWorld,false,0,1);
+                    scintArmLogical,"scintArmPhysical",LogicalWorld,false,0);
 
   scintPhosphorLogical->SetVisAttributes(LanexVis);
   scintFinishLogical->SetVisAttributes(PolyVis1);
   scintBaseLogical->SetVisAttributes(PolyVis2);
-
+  scintArmLogical->SetVisAttributes(G4VisAttributes::GetInvisible());
  }
  else {  G4cout<<"There is no Lanex screen in the beam"<<G4endl;}
  //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
