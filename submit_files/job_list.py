@@ -9,11 +9,12 @@ import csv
 
 name = f"job_list_sim{sys.argv[1]}.txt"
 
-Xstart = -60
-Xend = 60
+Xstart = -30
+Xend = 30
 dx = 5
-Status = [["true"], ["false"]]
-#Status=[["true","true"],["false", "false"],["true", "false"],["false", "true"]]
+# Status = [["true"], ["false"]]
+Status = [["true", "true"], ["false", "false"],
+          ["true", "false"], ["false", "true"]]
 with open(name, "w") as f:
     writer = csv.writer(f)
     for n in range(len(Status)):

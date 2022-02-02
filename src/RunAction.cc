@@ -50,6 +50,7 @@
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
 #include <iomanip>
+#include "G4GDMLParser.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -99,6 +100,14 @@ oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
   fProcCounter = new ProcessesCount;
   fTotalEventCount = 0;
 
+// gdml file from sasha~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if (isMaster) {
+    // if (fDumpGeometry) {
+      G4GDMLParser parser;
+      parser.Write(fileName+".gdml", fDetector->GetWorld());
+    // }
+  }
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
