@@ -72,7 +72,7 @@ void PhysListOptical::ConstructProcess()
 {
   //
   theCerenkovProcess           = new G4Cerenkov("Cerenkov");             /// - Cerenkov
-  theScintillationProcess      = new G4Scintillation("Scintillation");   /// - Scintillation
+  // theScintillationProcess      = new G4Scintillation("Scintillation");   /// - Scintillation
   theAbsorptionProcess         = new G4OpAbsorption();		         /// - Bulk absorption
   theRayleighScatteringProcess = new G4OpRayleigh();		         /// - Rayleigh scattering
   theBoundaryProcess           = new G4OpBoundaryProcess();	         /// - Reflection / refraction at optical interfaces.
@@ -88,8 +88,8 @@ void PhysListOptical::ConstructProcess()
    */
   theCerenkovProcess->SetTrackSecondariesFirst(false);
 
-  theScintillationProcess->SetScintillationYieldFactor(1.);
-  theScintillationProcess->SetTrackSecondariesFirst(false);
+  // theScintillationProcess->SetScintillationYieldFactor(1.);
+  // theScintillationProcess->SetTrackSecondariesFirst(false);
 
   auto particleIterator=GetParticleIterator();
   particleIterator->reset();
@@ -103,11 +103,11 @@ void PhysListOptical::ConstructProcess()
       pmanager->SetProcessOrdering(theCerenkovProcess,idxPostStep);
       //     pmanager->AddContinuousProcess(theCerenkovProcess);
     }
-    if (theScintillationProcess->IsApplicable(*particle)) {
-      pmanager->AddProcess(theScintillationProcess);
-      pmanager->SetProcessOrderingToLast(theScintillationProcess, idxAtRest);
-      pmanager->SetProcessOrderingToLast(theScintillationProcess, idxPostStep);
-    }
+    // if (theScintillationProcess->IsApplicable(*particle)) {
+    //   pmanager->AddProcess(theScintillationProcess);
+    //   pmanager->SetProcessOrderingToLast(theScintillationProcess, idxAtRest);
+    //   pmanager->SetProcessOrderingToLast(theScintillationProcess, idxPostStep);
+    // }
     if (particleName == "opticalphoton") {
       G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
       pmanager->AddDiscreteProcess(theAbsorptionProcess);

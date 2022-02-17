@@ -34,6 +34,7 @@ private:
   G4Material* TF1; // LeadGlas
   G4Material* TF101; //LeadGlas radiation hard
   G4Material* Air;
+  G4Material* Air_NoRI;
   G4Material* Iron;
   G4Material* Tungsten;
   G4Material* Lead;

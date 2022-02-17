@@ -173,9 +173,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
  if( command == fCrystalnumberCmd )
    { fDetector->SetCrystalnumber(newValue);}
 
- if( command == fCrystalnumberCmd )
-   { fDetector->SetCrystalnumber(newValue);}
-
  if( command == fCollimatorCmd )
    { fDetector->SetCollimatorRadius(fCollimatorCmd->GetNewDoubleValue(newValue));}
 

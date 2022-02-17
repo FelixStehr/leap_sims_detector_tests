@@ -129,6 +129,13 @@ void Materials::DefineMaterials()
   Air->AddElement(O, 21*perCent);
   Air->AddElement(Ar, 1*perCent);
 
+  // Air_NoRI
+  Air_NoRI = new G4Material("Air_NoRI" , density = 1.290*mg/cm3, ncomponents = 3);
+  Air_NoRI->AddElement(N, 78*perCent);
+  Air_NoRI->AddElement(O, 21*perCent);
+  Air_NoRI->AddElement(Ar, 1*perCent);
+
+
   // Vacuum
   Galactic = new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
                   kStateGas, 2.73*kelvin, 3.e-18*pascal);

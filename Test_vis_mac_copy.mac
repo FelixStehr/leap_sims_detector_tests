@@ -7,13 +7,12 @@
 /control/saveHistory
 /run/verbose 2
 /leap/phys/addPhysics polarized
-
-
+#/run/printProgress 1
 # Initialize kernel
 /run/initialize
 #
 /gps/energy 60 MeV
-/gps/number 100 #number of electrons in a bunch
+/gps/number 1000 #number of electrons in a bunch
 /gps/particle e-
 /gps/pos/centre 0.0 0.0 -3870.0 mm  # Position of the edge of the crystal is at y= 225.0055 mm
 #/leap/det/Setnumberofcrystals one
@@ -23,10 +22,10 @@
 #/leap/det/Setnumberofcrystals nine
 /leap/det/SetCaloXpos 0 mm
 
-/leap/det/WithSicintillatorFinger true
+/leap/det/WithSicintillatorFinger false
 /leap/det/WithLanexScreen true
 /leap/det/WithStrawDetector true
-/leap/det/update
+#/leap/det/update
 
 
 #---------gps-commands-------------------------------------
@@ -50,4 +49,4 @@
 #------------------------------------------------------
 
 # Visualization setting
-/control/execute vis.mac
+/run/beamOn 1
