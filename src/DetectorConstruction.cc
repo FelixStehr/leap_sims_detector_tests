@@ -961,7 +961,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 if(SFStatus=="true"){
 
   //Vinylfoil for the Scintillator fingers
-  auto SFVinylS= new G4Box("SFVenylfoilS",  //Name
+  //
+  auto SFVinylS= new G4Box("SFVinylfoilS",  //Name
                                 SFVinylx/2.,   // x size
                                 SFVinyly/2.,     // y size
                                 SFVinyllength/2.); // z size
@@ -1375,17 +1376,7 @@ if(SFStatus=="true"){
                                  0);                        //copy number
 
    fAluWindowLV->SetVisAttributes(AluWindowVis);
-
-
-
-
-
  }
-
-
-
-
-
 
 
 
