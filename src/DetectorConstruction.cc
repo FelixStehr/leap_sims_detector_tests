@@ -235,10 +235,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4double SFpositonZ = 420*mm - SFVinylx/2;
   G4double Intersectiondis = 10*mm;     // Position were the electron beam hits the SF from its edge
-  // G4double SFpositonx = -(SFVinyllength/2.-Intersectiondis)/sqrt(2);
-  // G4double SFpositony = SFpositonx;
-  G4double SFpositonx = 400*mm;
-  G4double SFpositony = 0*mm;
+  G4double SFpositonx = -(SFVinyllength/2.-Intersectiondis)/sqrt(2);
+  G4double SFpositony = SFpositonx;
+  // G4double SFpositonx = 400*mm;
+  // G4double SFpositony = 0*mm;
 
   G4RotationMatrix* SFRotation = new G4RotationMatrix();
   SFRotation->rotateY(90.*deg);
@@ -248,7 +248,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // Lanex screen (from Jon)
   //
-  G4double ToyX = 400*mm;
+  G4double ToyX = 0*mm;
 
   G4double scz1 = 0.25 * mm;
   G4double scz2 = 0.14 * mm;
@@ -289,8 +289,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* Venyl = allMaterials->GetMat("G4_POLYVINYL_CHLORIDE");
   G4Material* PMTGlass = allMaterials->GetMat("Glass");
   //change the SFmat
-//  G4Material* SFMat = allMaterials->GetMat("G4_PLASTIC_SC_VINYLTOLUENE"); // not sure if it is the right material
-  G4Material* SFMat = allMaterials->GetMat("G4_PARAFFIN");
+  G4Material* SFMat = allMaterials->GetMat("G4_PLASTIC_SC_VINYLTOLUENE"); // not sure if it is the right material
+  // G4Material* SFMat = allMaterials->GetMat("G4_PARAFFIN");
   G4Material* lanex = allMaterials->GetMat("G4_GADOLINIUM_OXYSULFIDE");
   G4Material* Pstyrene = allMaterials->GetMat("Polystyrene");
   G4Material* CuAu = allMaterials->GetMat("GoldAlloy");

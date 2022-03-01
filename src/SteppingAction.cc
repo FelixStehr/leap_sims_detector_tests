@@ -182,7 +182,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       // if (postvolume == VacStep3PV && prevolume != VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){G4cout<<"OPTICALPHOTONDEFINITION"<<G4endl;}
       else if (postvolume == VacStep3PV && prevolume != VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
           auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
-          G4cout<<"Energy of detected optical Photon: Eph ="<<ephot<<G4endl;
+          // G4cout<<"Energy of detected optical Photon: Eph ="<<ephot<<G4endl;
           auto GlobalPosition = aStep->GetPostStepPoint()->GetPosition();
           auto LocalPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(GlobalPosition);
           // auto xglobal = aStep->GetPostStepPoint()->GetPosition().x();
