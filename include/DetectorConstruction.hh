@@ -65,6 +65,8 @@ public:
   void SetCollimatorRadius (G4double);
   void SetCaloDistance (G4double);
   void SetSFStatus (G4String);
+  void SetLanexStatus (G4String);
+  void SetStrawStatus (G4String);
   void SetCaloXposition (G4double);
   void UpdateGeometry ();
 
@@ -79,7 +81,7 @@ public:
   const G4VPhysicalVolume* GetDetectorPV() const;
   const G4VPhysicalVolume* GetAluwrapPV() const;
   const G4VPhysicalVolume* GetVinylPV() const;
-  const G4VPhysicalVolume* GetVacStep5PV() const;
+  // const G4VPhysicalVolume* GetVacStep5PV() const;
 
   G4double           GetWorldSize()  {return fWorldSize;};
   G4double           GetSizeXY()  {return fSizeXY;};
@@ -92,7 +94,7 @@ public:
 
 private:
 
-  Materials *allMaterials; // Object giving access to all elements and materials defined by Materials.
+  Materials *allMaterials; // Object gives access to all elements and materials defined by Materials.
   G4VPhysicalVolume*    PhysicalWorld;
   G4VPhysicalVolume*    PhysicalCore;
   G4VPhysicalVolume*   fVacStepPV1;
@@ -106,7 +108,7 @@ private:
   G4VPhysicalVolume*   fVirtCaloPV;
   G4VPhysicalVolume*   fCaloCellPV;
   G4VPhysicalVolume*   fVenylPV;
-  G4VPhysicalVolume*   fVacStepPV5;
+  // G4VPhysicalVolume*   fVacStepPV5;
 
   G4double              fSizeXY;
   G4double              fCoreThick;
@@ -124,6 +126,8 @@ private:
   G4double dCalo;
   G4double RCollimator;
   G4String SFStatus;
+  G4String LanexStatus;
+  G4String StrawStatus;
   G4double CaloXpos;
 
 
@@ -150,9 +154,9 @@ inline const G4VPhysicalVolume* DetectorConstruction::GetAluwrapPV() const {
 inline const G4VPhysicalVolume* DetectorConstruction::GetVinylPV() const {
   return fVenylPV;
 }
-inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep5PV() const {
-  return fVacStepPV5;
-}
+// inline const G4VPhysicalVolume* DetectorConstruction::GetVacStep5PV() const {
+//   return fVacStepPV5;
+// }
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif

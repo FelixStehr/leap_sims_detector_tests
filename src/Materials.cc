@@ -44,8 +44,10 @@ void Materials::DefineMaterials()
   G4Element* Ce      = new G4Element(name="Cer"     ,symbol="Ce"  , z=58  , a = 140.116*g/mole);
   G4Element* Pb      = new G4Element(name="Blei"    ,symbol="Pb"  , z=82  , a = 207.2*g/mole);
   G4Element* Na      = new G4Element(name="Natrium" ,symbol="Na"  , z=11  , a = 22.9898*g/mole);
-
-
+  G4Element* Au      = new G4Element(name="Gold"    ,symbol="Au"  , z=79  , a = 196.96657*g/mole);
+  G4Element* Cu      = new G4Element(name="Copper"  ,symbol="Cu"  , z=29  , a = 63.546*g/mole);
+  G4Element* C       = new G4Element(name="Carbon"  ,symbol="C"   , z=6   , a = 12.011*g/mole);
+  G4Element* H       = new G4Element(name="Hydrogen",symbol="H"   , z=1   , a = 1.00784*g/mole);
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   // define materials
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,17 +76,20 @@ void Materials::DefineMaterials()
   Iron = nistManager->FindOrBuildMaterial("G4_Fe");
   Tungsten = nistManager->FindOrBuildMaterial("G4_W");
   Copper = nistManager->FindOrBuildMaterial("G4_Cu");
+  Gold   = nistManager->FindOrBuildMaterial("G4_Au");
   Lead = nistManager->FindOrBuildMaterial("G4_Pb");
   Concrete = nistManager->FindOrBuildMaterial("G4_CONCRETE");
   StainlessSteel=nistManager->FindOrBuildMaterial("G4_STAINLESS-STEEL");
   PVC=nistManager->FindOrBuildMaterial("G4_POLYVINYL_CHLORIDE");
   Plastic_SC = nistManager->FindOrBuildMaterial("G4_PLASTIC_SC_VINYLTOLUENE");
+  Parafin = nistManager->FindOrBuildMaterial("G4_PARAFFIN");
+  Mylar = nistManager->FindOrBuildMaterial("G4_MYLAR");
+  Lanex = nistManager->FindOrBuildMaterial("G4_GADOLINIUM_OXYSULFIDE"); // This is the szintillator screen from LUXE
+
 
   G4Material* PbO = nistManager->FindOrBuildMaterial("G4_LEAD_OXIDE");
   G4Material* SiO2 = nistManager->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
   G4Material* K2O = nistManager->FindOrBuildMaterial("G4_POTASSIUM_OXIDE");
-
-
 
   /*
   // CsI (Cesiumiodide for the scintillator. Optical properties still need to be defined !!! )
@@ -124,6 +129,13 @@ void Materials::DefineMaterials()
   Air->AddElement(O, 21*perCent);
   Air->AddElement(Ar, 1*perCent);
 
+  // Air_NoRI
+  Air_NoRI = new G4Material("Air_NoRI" , density = 1.290*mg/cm3, ncomponents = 3);
+  Air_NoRI->AddElement(N, 78*perCent);
+  Air_NoRI->AddElement(O, 21*perCent);
+  Air_NoRI->AddElement(Ar, 1*perCent);
+
+
   // Vacuum
   Galactic = new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
                   kStateGas, 2.73*kelvin, 3.e-18*pascal);
@@ -132,6 +144,32 @@ void Materials::DefineMaterials()
   PMTGlass = new G4Material ("Glass", density=2.20*g/cm3, ncomponents=2);
   PMTGlass->AddElement (O,  2./3.);
   PMTGlass->AddElement (Si, 1./3.);
+
+  //Cu-Au
+
+  CuAu = new G4Material ("GoldAlloy", density=14.8*g/cm3, ncomponents=2); // not sure which alloy we need
+  CuAu->AddElement (Au, 75*perCent);
+  CuAu->AddElement (Cu, 25*perCent);
+
+  //PLA Polylactic acid
+  PLA = new G4Material ("PLA", density=1.43*g/cm3, ncomponents=3); // plastic for the LUXE Straw container
+  PLA->AddElement (C,  3);
+  PLA->AddElement (H, 4);
+  PLA->AddElement (O, 2);
+
+  //PET for the Mylar foil
+  PET = new G4Material ("PET", density=1.38*g/cm3, ncomponents=3); // plastic for the LUXE Straw foil
+  PET->AddElement (C, 10);
+  PET->AddElement (H, 8);
+  PET->AddElement (O, 4);
+
+  //Polystyrene
+  Pstyrene = new G4Material("Polystyrene", density= 1.03*g/cm3, 2);
+  Pstyrene->AddElement(C, 8);
+  Pstyrene->AddElement(H, 8);
+
+
+
 
 
 

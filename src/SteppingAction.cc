@@ -152,19 +152,20 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
 
       // Get the incomming e- energy for crystal 0 and 1 from all sides
-      else if (postvolume == CrystalPV && prevolume !=CrystalPV & aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
+      else if (postvolume == CrystalPV && prevolume !=CrystalPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
          auto Ee = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
+         G4cout<<"Energy of detected Electron in Crystal0: Eel ="<<Ee<<G4endl;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEelectron0(Ee);} // ReplicaNumber1 should be the one from the Vacstep4
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEelectron1(Ee);}
          }
       // Get the incomming gamma energy for crystal 0 and 1
-      else if (postvolume == CrystalPV && prevolume !=CrystalPV & aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
+      else if (postvolume == CrystalPV && prevolume !=CrystalPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 22) {
          auto Eg = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEgamma0(Eg);}
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEgamma1(Eg);}
          }
       // Get the incomming energy of all other particles for crystal 0 and 1
-      else if (postvolume == CrystalPV && prevolume !=CrystalPV & aTrack->GetParticleDefinition()->GetPDGEncoding() ==  -11 ) {
+      else if (postvolume == CrystalPV && prevolume !=CrystalPV && aTrack->GetParticleDefinition()->GetPDGEncoding() ==  -11 ) {
          auto Er = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddErest0(Er);}
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddErest1(Er);}
@@ -173,10 +174,15 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
 
       // Now I will fill the Histogramms
+      // check if any photons get produced
+      // if (prevolume == CrystalPV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+      //     G4cout<<"Photon with a energy of:"<<aStep->GetPostStepPoint()->GetTotalEnergy()/eV<<"eV"<<G4endl;}
 
-      else if (postvolume == VacStep3PV && prevolume !=VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
+
+      // if (postvolume == VacStep3PV && prevolume != VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){G4cout<<"OPTICALPHOTONDEFINITION"<<G4endl;}
+      else if (postvolume == VacStep3PV && prevolume != VacStep3PV && aTrack->GetDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
           auto ephot = aStep->GetPostStepPoint()->GetTotalEnergy()/eV;
-
+          // G4cout<<"Energy of detected optical Photon: Eph ="<<ephot<<G4endl;
           auto GlobalPosition = aStep->GetPostStepPoint()->GetPosition();
           auto LocalPosition = theTouchable->GetHistory()->GetTopTransform().TransformPoint(GlobalPosition);
           // auto xglobal = aStep->GetPostStepPoint()->GetPosition().x();
@@ -367,16 +373,16 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       //
       // if(postvolume == VacStep4PV && prevolume !=VacStep4PV && prevolume !=AluwrapPV && (aTrack->GetParticleDefinition()->GetPDGEncoding() == 11 || aTrack->GetParticleDefinition()->GetPDGEncoding()==-11)) {
       //             aTrack->SetTrackStatus(fStopAndKill);}
-       if(fDetector->GetSFStatus()=="true") {
-         auto VacStep5PV=fDetector->GetVacStep5PV();
-
-         if( postvolume == VacStep5PV && prevolume !=VacStep5PV) {
-
-            fAnalysisManager->FillNtupleIColumn(2,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
-            fAnalysisManager->FillNtupleDColumn(2,1,aStep->GetPostStepPoint()->GetTotalEnergy()/MeV);
-          }
+      //  if(fDetector->GetSFStatus()=="true") {
+      //    auto VacStep5PV=fDetector->GetVacStep5PV();
+      //
+      //    if( postvolume == VacStep5PV && prevolume !=VacStep5PV) {
+      //
+      //       fAnalysisManager->FillNtupleIColumn(2,0, aStep->GetTrack()->GetParticleDefinition()->GetPDGEncoding());
+      //       fAnalysisManager->FillNtupleDColumn(2,1,aStep->GetPostStepPoint()->GetTotalEnergy()/MeV);
+      //     }
+      //   }
         }
-      }
 
       else if (versionType=="PolCal"){
         auto VacStep1PV=fDetector->GetVacStep1PV();

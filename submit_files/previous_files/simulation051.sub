@@ -1,0 +1,8 @@
+executable = ./simulation051.sh
+arguments = $(ProcID) $(straw) $(screen) $(xPos)
+
+log = /nfs/dust/ilc/user/fstehr/leap_sims/log/job_$(ProcID).log
+output = /nfs/dust/ilc/user/fstehr/leap_sims/out/job_$(ProcID).out
+error = /nfs/dust/ilc/user/fstehr/leap_sims/err/job_$(ProcID).err
+
+queue straw, screen, xPos from job_list_sim051.txt

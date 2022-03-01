@@ -90,7 +90,7 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 
   fCrystalnumberCmd = new G4UIcmdWithAString("/leap/det/Setnumberofcrystals",this);
   fCrystalnumberCmd->SetGuidance("Set the Number of the Crystals one or nine");
-  fCrystalnumberCmd->SetParameterName("choice",false);
+  fCrystalnumberCmd->SetParameterName("NCrystals",false);
   fCrystalnumberCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fCollimatorCmd = new G4UIcmdWithADoubleAndUnit("/leap/beamline/Collimator",this);
@@ -109,9 +109,18 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction * det)
 
   fSFCmd = new G4UIcmdWithAString("/leap/det/WithSicintillatorFinger",this);
   fSFCmd->SetGuidance("Select if you want the Scintillator finger or not");
-  fSFCmd->SetParameterName("choice",false);
+  fSFCmd->SetParameterName("SF",false);
   fSFCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fLanexCmd = new G4UIcmdWithAString("/leap/det/WithLanexScreen",this);
+  fLanexCmd->SetGuidance("Select if you want the Lanex screen or not");
+  fLanexCmd->SetParameterName("Lanex",false);
+  fLanexCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  fStrawCmd = new G4UIcmdWithAString("/leap/det/WithStrawDetector",this);
+  fStrawCmd->SetGuidance("Select if you want the LUXE Straw detector or not");
+  fStrawCmd->SetParameterName("Straw",false);
+  fStrawCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fCaloXposCmd = new G4UIcmdWithADoubleAndUnit("/leap/det/SetCaloXpos",this);
   fCaloXposCmd->SetGuidance("X position of the Calorimeter");
@@ -136,6 +145,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fCollimatorCmd;
   delete fdCaloCmd;
   delete fSFCmd;
+  delete fLanexCmd;
+  delete fStrawCmd;
   delete fCaloXposCmd;
 
 }
@@ -162,9 +173,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
  if( command == fCrystalnumberCmd )
    { fDetector->SetCrystalnumber(newValue);}
 
- if( command == fCrystalnumberCmd )
-   { fDetector->SetCrystalnumber(newValue);}
-
  if( command == fCollimatorCmd )
    { fDetector->SetCollimatorRadius(fCollimatorCmd->GetNewDoubleValue(newValue));}
 
@@ -173,6 +181,12 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 
  if( command == fSFCmd )
    { fDetector->SetSFStatus(newValue);}
+
+ if( command == fLanexCmd )
+   { fDetector->SetLanexStatus(newValue);}
+
+ if( command == fStrawCmd )
+   { fDetector->SetStrawStatus(newValue);}
 
  if( command == fCaloXposCmd )
    { fDetector->SetCaloXposition(fCaloXposCmd->GetNewDoubleValue(newValue));}

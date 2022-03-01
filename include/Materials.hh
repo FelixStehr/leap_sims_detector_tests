@@ -34,16 +34,25 @@ private:
   G4Material* TF1; // LeadGlas
   G4Material* TF101; //LeadGlas radiation hard
   G4Material* Air;
+  G4Material* Air_NoRI;
   G4Material* Iron;
   G4Material* Tungsten;
   G4Material* Lead;
   G4Material* Copper;
+  G4Material* Gold;
   G4Material* Aluminium;
   G4Material* Concrete;
   G4Material* StainlessSteel;
   G4Material* PVC;
   G4Material* PMTGlass;
   G4Material* Plastic_SC;
+  G4Material* CuAu;
+  G4Material* PLA;
+  G4Material* PET;
+  G4Material* Parafin;
+  G4Material* Mylar;
+  G4Material* Lanex;
+  G4Material* Pstyrene;
 
   // G4Material* Grease; ///< Optical grease between PMT window and quartz stick
 
