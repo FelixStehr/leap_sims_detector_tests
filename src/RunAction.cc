@@ -101,12 +101,12 @@ oss << "run"<< aRun->GetRunID()<< "_"<< outFileName ;
   fTotalEventCount = 0;
 
 // gdml file from sasha~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if (isMaster) {
-    // if (fDumpGeometry) {
-      G4GDMLParser parser;
-      parser.Write(fileName+".gdml", fDetector->GetWorld());
-    // }
-  }
+  // if (isMaster) {
+  //
+  //     G4GDMLParser parser;
+  //     parser.Write(fileName+".gdml", fDetector->GetWorld());
+  //
+  // }
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 }
 
@@ -159,10 +159,15 @@ void RunAction::BookHisto()
      // Histos for the photon spectrum at the back of the crystal
      //
      // Crystal 0 (the one with the square PMT)
-     fAnalysisManager->CreateH1("SPMTanode1","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=0
-     fAnalysisManager->CreateH1("SPMTanode2","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=1
-     fAnalysisManager->CreateH1("SPMTanode3","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=2
-     fAnalysisManager->CreateH1("SPMTanode4","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=3
+     // fAnalysisManager->CreateH1("SPMTanode1","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=0
+     // fAnalysisManager->CreateH1("SPMTanode2","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=1
+     // fAnalysisManager->CreateH1("SPMTanode3","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=2
+     // fAnalysisManager->CreateH1("SPMTanode4","Cherekov Spectrum", 100, 1.3, 3.3);// Histogramm: ID=3
+
+     fAnalysisManager->CreateH1("SPMTanode1","Cherekov Spectrum", 300, 1.3, 8);// Histogramm: ID=0
+     fAnalysisManager->CreateH1("SPMTanode2","Cherekov Spectrum", 300, 1.3, 8);// Histogramm: ID=1
+     fAnalysisManager->CreateH1("SPMTanode3","Cherekov Spectrum", 300, 1.3, 8);// Histogramm: ID=2
+     fAnalysisManager->CreateH1("SPMTanode4","Cherekov Spectrum", 300, 1.3, 8);// Histogramm: ID=3
 
      //Crystal 1 ( the one with the round PMT)
 

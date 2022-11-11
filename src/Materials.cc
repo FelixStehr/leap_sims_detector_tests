@@ -182,7 +182,17 @@ void Materials::DefineMaterials()
   // Quartz (taken from Quartz Cherenkov Simulation)
   //-------------------------------------------------------------------------------------
   const G4int nSpectRI=25;
+  const G4int nSpectRInew=2;
   const G4int nSpectAbs=9;
+
+  // G4double ESpectrosil[2] ={1.38*eV, 6.7*eV};
+  //
+  // G4double ABSpectrosil[2]={3000*mm, 3000*mm};
+  //
+  //
+  // G4double ESpectrosil[2] ={1.38*eV, 6.7*eV};
+  //
+  // G4double ABSpectrosil[2]={3000*mm, 3000*mm};
 
   G4double EnergySpectrosil[nSpectRI]={1.38 *eV, 1.455*eV, 1.755*eV, 1.889*eV,
                                        1.926*eV, 1.959*eV, 2.104*eV, 2.110*eV,
@@ -197,16 +207,19 @@ void Materials::DefineMaterials()
                                    1.50547, 1.50838, 1.50855, 1.52109, 1.53365,
                                    1.54259, 1.55884, 1.56014, 1.56077, 1.57495};
 
+
+
   G4double ESpectrosil[nSpectAbs] ={1.38*eV , 3.1*eV ,  3.35*eV , 4.0*eV , 4.43*eV ,
                                    4.96*eV , 5.64*eV , 6.53*eV , 6.7*eV};
 
   G4double ABSpectrosil[nSpectAbs]={134.8*mm, 131.2*mm, 130.1*mm, 124.8*mm, 119.9*mm,
                                     112.6*mm, 106.0*mm, 94.9*mm, 1.6*mm};
 
+
   G4MaterialPropertiesTable* MPT_Quartz = new G4MaterialPropertiesTable();
 
   MPT_Quartz->AddProperty ("RINDEX",  EnergySpectrosil, RISpectrosil, nSpectRI);
-  MPT_Quartz->AddProperty ("ABSLENGTH", ESpectrosil, ABSpectrosil, nSpectAbs);
+  MPT_Quartz->AddProperty ("ABSLENGTH", ESpectrosil, ABSpectrosil,nSpectAbs );
 
 
   Quartz->SetMaterialPropertiesTable(MPT_Quartz);
