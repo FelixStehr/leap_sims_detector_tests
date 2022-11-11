@@ -154,7 +154,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
       // Get the incomming e- energy for crystal 0 and 1 from all sides
       else if (postvolume == CrystalPV && prevolume !=CrystalPV && aTrack->GetParticleDefinition()->GetPDGEncoding() == 11) {
          auto Ee = aStep->GetPostStepPoint()->GetKineticEnergy()/MeV;
-         G4cout<<"Energy of detected Electron in Crystal0: Eel ="<<Ee<<G4endl;
+         // G4cout<<"Energy of detected Electron in Crystal0: Eel ="<<Ee<<G4endl;
          if(theTouchable->GetReplicaNumber(1)==0){fEventAction->AddEelectron0(Ee);} // ReplicaNumber1 should be the one from the Vacstep4
          else if(theTouchable->GetReplicaNumber(1)==1){fEventAction->AddEelectron1(Ee);}
          }
@@ -207,7 +207,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
           else if (theTouchable->GetReplicaNumber(5)==1 && r<= 12.5 ){
 
             fAnalysisManager->FillH1(4, ephot);}
-
+          aTrack->SetTrackStatus(fStopAndKill);   
           }
 
 

@@ -75,7 +75,7 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   fSizeXY = 50*mm;
   fCoreThick = 75*mm;
   fConvThick = 1.75*mm;
-  fWorldSize = 9*m;
+  fWorldSize = 3*m;
   CrystalNumber= "one";
   SFStatus ="false";
   LanexStatus ="false";
@@ -95,8 +95,9 @@ DetectorConstruction::DetectorConstruction(G4String version, G4String beamline)
   //   SetWorldMaterial("Galactic");
   //   G4cout << "NO VALID IMPUT FOR BEAMLINE: beamlineStatus set to off!->all simulations in vacuum"<< G4endl;
   //    }
-  SetCaloMaterial("TF101");
-  SetWorldMaterial("Air_NoRI");
+  SetCaloMaterial("Quartz");
+  // SetCaloMaterial("TF101");
+  SetWorldMaterial("Galactic");
 
   fMessenger = new DetectorMessenger(this);
 }
@@ -143,7 +144,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Calorimeter
   //
 
-  G4double detthick = 45.*cm; // crystal size
+  // G4double detthick = 45.*cm; // crystal size
+  G4double detthick = 45.*cm;
   G4double detx = 3.8 *cm;
   G4double dety = 3.8 *cm;
 
@@ -664,7 +666,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                                          "virtualCalorimeterLV");       //its name
 
   fVirtCaloPV = new G4PVPlacement(0,                   //no rotation: 0 or rotation 90 deg around x axis : myRotaion
-                         G4ThreeVector(calorcellxy/2+CaloXpos,0.,caloZposition),    //if CaloXpos =0 the crystal with the square PMT is in the centre of the beam
+                         G4ThreeVector(0.,0.,caloZposition),    //if CaloXpos =0 the crystal with the square PMT is in the centre of the beam  calorcellxy/2+CaloXpos
                                  fVirtCaloLV,            //its logical volume
                                  "virtualCalorimeterPV",                 //its name
                                 LogicalWorld,               //its mother

@@ -81,12 +81,12 @@ void PhysListOptical::ConstructProcess()
   //  theAbsorptionProcess->DumpPhysicsTable();
   //  theRayleighScatteringProcess->DumpPhysicsTable();
 
-  theCerenkovProcess->SetMaxNumPhotonsPerStep(300);
+  theCerenkovProcess->SetMaxNumPhotonsPerStep(100); //300
   /* large number of secondaries generated -> track secondaries first to avoid memory issues
    * on the other hand: this screws up counting of secondary electrons if they create
    * optical photons as well: they get suspended and then counted again...
    */
-  theCerenkovProcess->SetTrackSecondariesFirst(false);
+  theCerenkovProcess->SetTrackSecondariesFirst(false);//false
 
   // theScintillationProcess->SetScintillationYieldFactor(1.);
   // theScintillationProcess->SetTrackSecondariesFirst(false);
